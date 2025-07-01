@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 function Child(props) {
   const array = props.array;
   return (
     <ul className="flex flex-wrap w-full gap-4">
-      {array.map((item) => (
+      {array.map((item,index) => (
         <li
-          className="block text-left text-gray-300  border-r-[2px] border-gray-100 px-[2rem] w-[11rem] 
+          className="block text-left text-gray-300  border-r-[2px] border-gray-100 px-[2rem]  w-[11rem] 
           "
           key={item.id}
         >
+          <Link to={`/${item.id}`}>Ver más</Link>
           <img src={item.image} alt={item.firstName} />
           {item.id} {item.firstName}
           {item.age}

@@ -1,28 +1,28 @@
-import React from "react";
-
-export default function footerComponent(){
-  
+import React, { useRef } from "react";
+import Logo from '../assets/react.svg'
+export default function FooterComponent(){
+   
 return(
 <>
-<footer className="bg-white rounded-lg shadow-sm dark:bg-gray-900 m-4 w-full">
+<footer className={'rounded-lg shadow-sm bg-white m-0 w-full  z-20  relative bottom-0 h-auto border-t-[8px] border-t-[#09aed642]'}>
     <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
             <a href="https://flowbite.com/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-                <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-                <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+                <img src={Logo} className="h-[54px] w-[54px]" alt="Flowbite Logo" />
+                <h1 className="self-center md:text-2xl !text-xl md:relative absolute  md:left-[0px] left-[5rem] font-semibold whitespace-nowrap text-[#00718d]">Solutions Supports</h1>
             </a>
             <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
                 <li>
-                    <a href="#" className="hover:underline me-4 md:me-6">About</a>
+                    <a href="#" className="block py-2 px-3 text-[#00718d] rounded-sm md:bg-transparent hover:!text-white hover:bg-[#01718d8f] md:p-[0.5rem]">About</a>
                 </li>
                 <li>
-                    <a href="#" className="hover:underline me-4 md:me-6">Privacy Policy</a>
+                    <a href="#" className="block py-2 px-3 text-[#00718d] rounded-sm md:bg-transparent hover:!text-white hover:bg-[#01718d8f] md:p-[0.5rem]">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="#" className="hover:underline me-4 md:me-6">Licensing</a>
+                    <a href="#" className="block py-2 px-3 text-[#00718d] rounded-sm md:bg-transparent hover:!text-white hover:bg-[#01718d8f] md:p-[0.5rem]">Licensing</a>
                 </li>
                 <li>
-                    <a href="#" className="hover:underline">Contact</a>
+                    <a href="#" className="block py-2 px-3 text-[#00718d] rounded-sm md:bg-transparent hover:!text-white hover:bg-[#01718d8f] md:p-[0.5rem]">Contact</a>
                 </li>
             </ul>
         </div>

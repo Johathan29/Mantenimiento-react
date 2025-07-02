@@ -12,7 +12,7 @@ import NoPage from './Views/NoPage.jsx';
 import ContactPage from './Views/Contact.jsx';
 function App() {
   const [count, setCount] = useState(0);
-  const data = ControllerChild();
+  
   return (
     <>
     

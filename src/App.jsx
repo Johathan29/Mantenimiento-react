@@ -5,13 +5,19 @@ import './App.css';
 import Child from './Views/Child.jsx';
 import PropTypes from 'prop-types';
 import ControllerChild from './Controllers/ControllerChild.jsx';
+import Layout from './Views/Layout.jsx';
+import { BrowserRouter,Routes,Route} from "react-router-dom";
+import HomePage from './Views/Home.jsx';
+import NoPage from './Views/NoPage.jsx';
+import ContactPage from './Views/Contact.jsx';
 function App() {
   const [count, setCount] = useState(0);
-  const data = ControllerChild();
+  
   return (
     <>
-      <Child array={data} />
-      <div>
+    
+      
+      {/*<div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -30,7 +36,8 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
+  </p>*/}
+    
     </>
   );
 }

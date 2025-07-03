@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
+
 import ControllerChild from '../Controllers/ControllerChild';
 
 function Child() {
   const data = ControllerChild();
-
   return (
     <>
     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
@@ -20,32 +19,8 @@ function Child() {
     </div>
     <Link to={'/userall'} className=" !text-white flex items-center w-max gap-4 upperca se !text-[12px] md:!text-[14px]  md:!p-[0.5rem] !p-[0.2rem] top-[3px] right-[4px] bg-[#00718d] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium  rounded-lg text-[12px] px-4 py-[2px]">all views<i className="fa-duotone fa-solid fa-arrow-right"></i></Link>
     </>
-=======
-function Child(props) {
-  const array = props.array;
-  return (
-    <ul className="flex flex-wrap w-full gap-4">
-      {array.map((item,index) => (
-        <li
-          className="block text-left text-gray-300  border-r-[2px] border-gray-100 px-[2rem]  w-[11rem] 
-          "
-          key={item.id}
-        >
-          <Link to={`/${item.id}`}>Ver más</Link>
-          <img src={item.image} alt={item.firstName} />
-          {item.id} {item.firstName}
-          {item.age}
-        </li>
-      ))}
-    </ul>
->>>>>>> 16d950ea618718884b2a6b9924ee3c6247e51ad6
   );
 }
-Child.propTypes = {
-  array: PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.number.isRequired,
-  }),
-};
+
 
 export default Child;

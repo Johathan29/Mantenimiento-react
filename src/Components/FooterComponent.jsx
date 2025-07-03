@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useRef, useState } from "react";
 import Logo from '../assets/react.svg'
 export default function FooterComponent(){
@@ -7,16 +6,6 @@ return(
 <>
 <footer className={'rounded-lg shadow-sm bg-white m-0 w-full  z-20  relative bottom-0 h-auto border-t-[8px] border-t-[#09aed642]'}>
     <div className="w-full max-w-screen-xl md:mx-auto p-4 md:py-8">
-=======
-import React, { useRef } from "react";
-import Logo from '../assets/react.svg'
-export default function FooterComponent(){
-   
-return(
-<>
-<footer className={'rounded-lg shadow-sm bg-white m-0 w-full  z-20  relative bottom-0 h-auto border-t-[8px] border-t-[#09aed642]'}>
-    <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
->>>>>>> 16d950ea618718884b2a6b9924ee3c6247e51ad6
         <div className="sm:flex sm:items-center sm:justify-between">
             <a href="https://flowbite.com/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
                 <img src={Logo} className="h-[54px] w-[54px]" alt="Flowbite Logo" />

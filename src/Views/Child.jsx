@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import useControllerChild from '../Controllers/ControllerChild';
 import PathLocation from '../Hooks/Location';
 import TitlePage from '../Controllers/TitlePage';
-
+import process from 'process'
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, setDoc, doc } from 'firebase/firestore/lite';
 import AES from 'crypto-js/aes';
@@ -12,26 +12,26 @@ import encUtf8 from 'crypto-js/enc-utf8';
 function Child() {
   const [datacollection, setCollection] = useState([]);
   const [groupedByRol, setGroupedByRol] = useState([]);
-
+const key="AIzaSyAZ7UImhQ-sSuc8aUB0u6WuHwX8dTDe6m8"
   const firebaseConfig = {
-    apiKey: "AIzaSyAZ7UImhQ-sSuc8aUB0u6WuHwX8dTDe6m8",
-    authDomain: "crudfirebaseangular-f567e.firebaseapp.com",
-    databaseURL: "https://crudfirebaseangular-f567e-default-rtdb.firebaseio.com",
-    projectId: "crudfirebaseangular-f567e",
-    storageBucket: "crudfirebaseangular-f567e.appspot.com",
-    messagingSenderId: "139213728766",
-    appId: "1:139213728766:web:f8fa5f5c8a4271e78eeeaf",
-    measurementId: "G-9RVHN12TR1"
+    apiKey:import.meta.env.VITE_apiKey,
+    authDomain:import.meta.env.VITE_authDomain,
+    databaseURL:import.meta.env.VITE_databaseURL,
+    projectId:import.meta.env.VITE_projectId,
+    storageBucket:import.meta.env.VITE_storageBucket,
+    messagingSenderId:import.meta.env.VITE_messagingSenderId,
+    appId:import.meta.env.VITE_appId,
+    measurementId:import.meta.env.VITE_measurementId
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Encriptar y desencriptar mensaje
-  const hash = AES.encrypt('message', 'secret key').toString();
+  // Encriptar y desencriptar mensaje U2FsdGVkX1/17S5NweY0rN9qF+PNjeIEoLBJ31rc1g0=
+  const hash = AES.encrypt('Michael1234$', 'secret key').toString();
   const bytes = AES.decrypt(hash, 'secret key');
   const decryptedMessage = bytes.toString(encUtf8);
-
+console.log(firebaseConfig)
   // Agrupar por rol
   function groupByRol(data) {
     const grouped = {};
@@ -61,6 +61,8 @@ function Child() {
         email: 'rosariojohathan@gmail.com',
         iduser: 2,
         rol: 'admin',
+        password:'Michael1234$',
+        keyToken:'U2FsdGVkX19TWOw5MBWLsDUeHS9bs2I2BeEYj1SfOAQ=',
         imagen: "https://dummyjson.com/icon/michaelw/128",
         nombre: "michael",
         profesión: "Developer"

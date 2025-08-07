@@ -2,15 +2,15 @@ import Child from '../Views/Child.jsx';
 
 import ControllerChild from '../Controllers/ControllerChild.jsx';
 import { useEffect } from 'react';
+import BirthDay from '../Components/BirthDayComponent.jsx';
 export default function HomePage(){
-    useEffect(() => {
-        document.title = 'Home Page';
-      }, []);
+    
     const data = ControllerChild();
     return(
         <>
-      
-        <Child array={data} />
+     
+        <Child />
+        <BirthDay></BirthDay>
         </>
     )
 }

@@ -6,7 +6,7 @@ export default function SliderShow(){
 
 <div id="animation-carousel" class="relative w-full" data-carousel="static">
   
-    <div class="relative h-96 overflow-hidden  md:h-[35rem]">
+    <div class="relative h-[21rem] min-h-[21rem] overflow-hidden  md:h-[35rem]">
         
         <div class="hidden duration-200 ease-linear" data-carousel-item>
             <img src={hero} class="absolute block w-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="..."/>

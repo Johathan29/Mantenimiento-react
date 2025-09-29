@@ -1,6 +1,4 @@
-import { Card } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+
 import { Star, ShoppingCart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 //import { useCart } from "../../contexts/CartContext";

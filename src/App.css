@@ -72,14 +72,14 @@ a.buttonRef2{
   font-weight: 600;
   color: white;
   /*background: none;*/
-  border: 2px solid #646cff;
+  border: 2px solid #fff;
   border-radius: 8px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 .liquid {
-  background: linear-gradient(#646cff 0 0) no-repeat calc(200% - var(--p, 0%))
+  background: linear-gradient(#fff 0 0) no-repeat calc(200% - var(--p, 0%))
     100% / 200% var(--p, 0.2em);
     
   transition: 0.3s var(--t, 0s),
@@ -89,8 +89,8 @@ a.buttonRef2{
 .liquid:hover {
   --p: 100%;
   --t: 0.3s;
-  color: #fff;
- border: 2px #fff solid;
+  color:blue!important;
+ border: 2px #ffffff solid;
 }
 
 @keyframes logo-spin {
@@ -126,6 +126,10 @@ button{
   color: #fff;
   padding: .5rem;
   font-size: small;
+}
+
+div.bg-card:hover h3.font-bold.text-lg.text-\[\#21242c\] {
+  color: #00728f;
 }
 div#dropdownNavbar::before {
   content: "<";

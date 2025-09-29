@@ -55,7 +55,7 @@ export default function ChartDashboard() {
   (roleCounts.moderator || 0) +
   (roleCounts.user || 0);
 
-  const [activeChart, setActiveChart] = useState("usuarios"); // 👈 gráfico visible por defecto
+  const [activeChart, setActiveChart] = useState("usuarios"); // gráfico visible por defecto
 
  
   // 🔹 Cargar usuarios desde Firestore

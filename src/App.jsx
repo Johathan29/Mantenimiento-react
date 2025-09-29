@@ -5,7 +5,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 function App() {
-  const [users, setUsers] = useState([]);
+ /* const [users, setUsers] = useState([]);
   const [form, setForm] = useState({ nombre: "", email: "" });
   const [editId, setEditId] = useState(null);
   const API = "http://localhost/api/"; 
@@ -59,10 +59,11 @@ const handleEdit = (user) => {
       .then(getUsers);
   };
 
-  
+  */
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <>    <h1>hello</h1>
+   {/* <div style={{ padding: "1rem" }}>
       <h1>Gestión de Usuarios</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -89,7 +90,9 @@ const handleEdit = (user) => {
           </li>
         ))}
       </ul>
-    </div>
+        </div>*/}
+        </>
+
   );
 }
 

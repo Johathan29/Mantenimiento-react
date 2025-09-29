@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import BirthDay from '../Components/BirthDayComponent.jsx';
 import App from '../App.jsx';
 import ProductComponent from './Product.jsx';
-import AllProducts from './AllProducts.jsx';
+
 export default function HomePage(){
      useEffect(() => {
     document.title = 'Home - Solution Supports';

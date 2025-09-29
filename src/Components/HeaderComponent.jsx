@@ -174,6 +174,7 @@ function UserMenu({ users, currentUser, setCurrentUser }) {
           </div>
         )}
       </div>
+      
     </div>
   );
 }
@@ -183,7 +184,7 @@ function UserMenu({ users, currentUser, setCurrentUser }) {
 // ──────────────────────────────────────────────────────────────
 export default function HeaderComponent() {
   // mensajes
-  const [messages, setMessages] = useState([]);
+  //const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState({ id: "", state: false });
 
   // usuarios
@@ -221,7 +222,7 @@ export default function HeaderComponent() {
   // API mensajes
   const API = "http://localhost/api/";
   const id = 2;
-
+/*
   const getMessages = () => {
     fetch(API + "message/message.php", {
       method: "POST",
@@ -254,7 +255,7 @@ export default function HeaderComponent() {
       .then(() => getMessages())
       .catch((err) => console.error("Error al enviar:", err));
   };
-
+*/
   const navegation = [
     { id: 1, title: "Home", pathname: "/", LinkActive: false },
     { id: 2, title: "Collaborators", pathname: "/our_collaborators", LinkActive: false },
@@ -263,7 +264,7 @@ export default function HeaderComponent() {
     { id: 5, title: "Contact", pathname: "/contact_page", LinkActive: false },
   ];
 
-  const unreadCount = messages.filter((m) => !m.state).length;
+  //const unreadCount = messages.filter((m) => !m.state).length;
 
   return (
     <header
@@ -279,55 +280,6 @@ export default function HeaderComponent() {
             </span>
           </Link>
 
-          <div className="md:flex  items-center gap-2 absolute lg:top-[2rem] right-[4px] " id='car-shop'>
-            <button
-              id="dropdownNavbarLink"
-              data-dropdown-toggle="dropdownNavbar"
-              className="!text-[18px] !text-[#00718d]  !border-[0px] md:!text-[18px] !p-[0rem] top-[3px] right-[5rem] !bg-transparent hover:!bg-transparent hover:!p-0 h-max z-20 focus:ring-[0px] focus:!outline-none font-medium rounded-lg text-[12px] px-4 py-[2px]"
-            >
-              <i className="fa-solid fa-globe" />
-              {unreadCount > 0 && (
-                <sup className="text-sm text-red-500 font-bold"> {unreadCount}</sup>
-              )}
-            </button>
-
-            <div
-              id="dropdownNavbar"
-              className="-translate-x-[5.4rem] -translate-y-[0.8rem] z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44"
-            >
-              <ul
-                className="py-2 text-sm text-gray-700 bg-transparent"
-                aria-labelledby="dropdownLargeButton"
-                id="nav-Notificaciones"
-              >
-                {messages.map((item) => (
-                  <li
-                    key={item.id}
-                    className={
-                      item.state === false
-                        ? "last:border-b-0 border-b-4 border-[#f9f9f97d] hover:bg-[#cce3eb] bg-[#cce3eb] active"
-                        : "last:border-b-0 border-b-4 border-[#f9f9f97d] hover:bg-[#cce3eb] bg-transparent"
-                    }
-                  >
-                    <Link
-                      onClick={() => changeState(item)}
-                      to={`inbox/messageID:${item.id}&&userID:${item.iduser}`}
-                      className="block px-4 py-2 hover:!text-[#41474ceb] hover:!font-bold capitalize"
-                    >
-                      {item.nombre}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              type="button"
-              className="text-[#00718d] !text-[12px] md:!text-[14px] md:!p-[0.5rem] !p-[0.2rem] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-[12px] px-4 py-[2px]"
-            >
-              Get started
-            </button>
-          </div>
 
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse mr-[4px]">
             <button

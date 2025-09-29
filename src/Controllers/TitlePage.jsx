@@ -5,7 +5,7 @@ export default function TitlePage(props){
     const path = PathLocation();
     const value=path.replace("/" ,"").replace("_"," ")
     useEffect(()=>{
-        document.title=value.toLowerCase()
+        document.title=value.toUpperCase()
       })
-      console.log(value)
+    
 }

@@ -15,11 +15,11 @@ export default function Layout() {
 <SliderShow />
 </div>
 
-<section className='bg-gradient-to-tr from-[#00779e] '>
-      <div className="max-w-screen-xl md:mx-auto py-[2rem] px-[2rem] md:min-h-[45rem] h-auto" >
+<section className='bg-[#0f5167]'>
+      
         <div className="h-full min-h-[28rem] " >
           <Outlet />
-        </div>
+        
       </div>
       </section>
       <FooterComponent></FooterComponent>

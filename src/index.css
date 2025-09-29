@@ -66,3 +66,52 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.comment-bubble {
+  position: relative;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.comment-bubble::before {
+  content: '';
+    /* position: absolute; */
+    /* top: 100%; */
+    /* left: 20px; */
+    /* border-width: 10px; */
+    /* border-style: solid; */
+    /* border-color: #f0f0f0 transparent transparent transparent; */
+    /* width: 0; */
+    height: 0;
+    border-left: 2vh solid transparent;
+    border-right: 2vh solid transparent;
+    border-top: 10vh solid #f0f0f0;
+    position: absolute;
+    top: 45%;
+    left: -10%;
+    transform: rotate(60deg);
+}
+/*
+p.text-md.font-normal.text-gray-900.p-\[0\.9rem\].remitente:after {
+      height: 0;
+    border-left: 2vh solid transparent;
+    border-right: 2vh solid transparent;
+    border-top: 7vh solid #f3f4f6;
+    position: absolute;
+    bottom: 13rem;
+    right: 84%;
+    transform: rotate(138deg);
+    content: "";
+}
+p.text-md.font-normal.text-gray-900.p-\[0\.9rem\].emisor:after {
+    height: 0;
+    border-left: 2vh solid transparent;
+    border-right: 2vh solid transparent;
+    border-top: 7vh solid #f3f4f6;
+    position: absolute;
+    bottom: 5.5rem;
+    left: 26.5%;
+    transform: rotate(220deg);
+    content: "";
+}

@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useMemo, useState } from 'react';
+//import CounterNotifique from '../Hooks/counterNotifique';
+import dataMensaje from '../Data/dataMensaje.json'
+import TitlePage from '../Controllers/TitlePage';
+//import db from '../server/db'
 export default function ContactPage() {
-  useEffect(() => {
-    document.title = 'Contact Page';
-  }, []);
+ //console.log(db)
 
   const [messagesSent, setMessagesSent] = useState([]);
-
+  //const { data,counter } = CounterNotifique();
+  //data.data=messagesSent;
+  
   const send = (event) => {
     event.preventDefault(); // Prevenir recarga
 
@@ -14,20 +17,27 @@ export default function ContactPage() {
 
     const dataPost = {
       email: data.get('email'),
-      firstname: data.get('first_last_name'),
+      iduser: data.get('first_last_name'),
       message: data.get('message'),
     };
-
+    fetch("http://localhost/api/message/addmessage.php", {
+          method: "POST",
+          headers: {"Content-Type": "application/json",},
+          body: JSON.stringify(dataPost),
+          });
     setMessagesSent((prev) => [...prev, dataPost]);
-
+  
     // Opcional: puedes limpiar el formulario si deseas
     event.target.reset();
+    console.log(dataPost)
   };
-
+  TitlePage()
   return (
     <>
-      <h1 className="text-white !bg-transparent border-b-[1px] border-white w-full">Contact</h1>
+       
 
+      <h1 className="text-white !bg-transparent  w-full">Contact</h1>
+      <hr className='border-t-[6px] rounded-[15px] text-[#ffffff66]'/>
       <div className="md:flex block flex-wrap py-8">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d473.11948032824495!2d-70.03293972996113!3d18.440313943809237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ea56186844561bf%3A0xfc43bea124928235!2sRepuesto%20y%20Gomera%20R%20%26%20O!5e0!3m2!1ses!2sdo!4v1751418899402!5m2!1ses!2sdo"
@@ -38,9 +48,9 @@ export default function ContactPage() {
         ></iframe>
 
         <div className='rounded-b-lg md:rounded-r-lg md:rounded-b-none  border-1 px-[2rem] md:w-1/2'>
-          <h3 className='text-center !text-[1.5rem] md:p-0 p-5'>Contáctanos</h3>
+          <h3 className='text-center !text-[1.5rem] md:p-0 p-0 font-[600] !text-black'>Contact us</h3>
           <span className='!text-center text-sm w-full text-black leading-[0px] mb-[2rem] block'>
-            Puede enviarnos algún mensaje
+          You can send us a message
           </span>
 
           <form onSubmit={send}>
@@ -86,7 +96,7 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="text-[16px] font-bold hover:bg-white relative w-max hover:text-[#00718d] hover:border-[1px] hover:border-[#00718d]"
+              className="text-[16px] font-bold hover:bg-white relative my-4 md:my-0 w-max hover:text-[#00718d] hover:border-[1px] hover:border-[#00718d]"
             >
              Send
             </button>

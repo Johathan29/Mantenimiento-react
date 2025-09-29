@@ -1,0 +1,111 @@
+import { Product } from "../types/product";
+
+export const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "Laptop Gaming ProMax",
+    description: "Laptop de alta gama para gaming con procesador Intel i9 y RTX 4080",
+    price: 2499,
+    originalPrice: 2799,
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop",
+    category: "Electrónicos",
+    brand: "TechPro",
+    rating: 4.8,
+    reviews: 124,
+    inStock: true,
+    tags: ["gaming", "laptop", "alta-gama"]
+  },
+  {
+    id: "2", 
+    name: "Audífonos Wireless Elite",
+    description: "Audífonos inalámbricos con cancelación de ruido activa",
+    price: 299,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
+    category: "Audio",
+    brand: "SoundWave",
+    rating: 4.6,
+    reviews: 89,
+    inStock: true,
+    tags: ["audio", "wireless", "premium"]
+  },
+  {
+    id: "3",
+    name: "Smartphone Ultra 5G",
+    description: "Teléfono inteligente con cámara de 108MP y batería de larga duración",
+    price: 899,
+    originalPrice: 999,
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
+    category: "Móviles",
+    brand: "PhoneTech",
+    rating: 4.5,
+    reviews: 203,
+    inStock: true,
+    tags: ["smartphone", "5g", "cámara"]
+  },
+  {
+    id: "4",
+    name: "Reloj Deportivo Smart",
+    description: "Reloj inteligente con monitor de salud y GPS integrado",
+    price: 199,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
+    category: "Accesorios",
+    brand: "FitWatch",
+    rating: 4.3,
+    reviews: 67,
+    inStock: false,
+    tags: ["smartwatch", "deportivo", "salud"]
+  },
+  {
+    id: "5",
+    name: "Tablet Pro Creative",
+    description: "Tablet profesional para diseño y creatividad con stylus incluido",
+    price: 649,
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
+    category: "Electrónicos",
+    brand: "CreativeTech",
+    rating: 4.7,
+    reviews: 156,
+    inStock: true,
+    tags: ["tablet", "diseño", "profesional"]
+  },
+  {
+    id: "6",
+    name: "Cámara DSLR Profesional",
+    description: "Cámara réflex digital profesional con lente 24-70mm",
+    price: 1299,
+    originalPrice: 1499,
+    image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=300&fit=crop",
+    category: "Fotografía",
+    brand: "PhotoMaster",
+    rating: 4.9,
+    reviews: 98,
+    inStock: true,
+    tags: ["cámara", "profesional", "dslr"]
+  },
+  {
+    id: "7",
+    name: "Monitor 4K UltraWide",
+    description: "Monitor curvo de 32 pulgadas con resolución 4K y 144Hz",
+    price: 799,
+    image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop",
+    category: "Monitores",
+    brand: "DisplayPro",
+    rating: 4.4,
+    reviews: 178,
+    inStock: true,
+    tags: ["monitor", "4k", "gaming"]
+  },
+  {
+    id: "8",
+    name: "Teclado Mecánico RGB",
+    description: "Teclado mecánico para gaming con switches azules y retroiluminación RGB",
+    price: 149,
+    image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=300&fit=crop",
+    category: "Accesorios",
+    brand: "KeyMaster",
+    rating: 4.2,
+    reviews: 234,
+    inStock: true,
+    tags: ["teclado", "mecánico", "rgb"]
+  }
+];

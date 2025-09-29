@@ -9,6 +9,12 @@ export default class ModelChild {
       address: data.address.address,
       city: data.address.city,
       state: data.address.state,
-    }
+    };
+    this.company={
+      title:data.company.title,
+      department:data.company.department,
+      
+    };
+    this.birthDate=data.birthDate
   }
 }

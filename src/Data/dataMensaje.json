@@ -1,0 +1,21 @@
+[
+   {
+    "id":1,
+    "email":"rosariojohathan@hotmail.com",
+    "first_last_name": "Johathan Rosario",
+    "message":"Hellos como esta? espero que bien",
+    "remitente":2,
+    "userID":1,
+    "date":"10-07-2025 21:59pm"
+   },
+   {
+    "id":2,
+    "email":"rosariojohathan@hotmail.com",
+    "first_last_name": "Miguel Benitez",
+    "message":" estoy bien gracia a Dios y tu estoy bien gracia a Dios y tu estoy bien gracia a Dios y tu",
+    "remitente":1,
+    "userID":2,
+    "date":"10-07-2025 22:10pm"
+   } 
+ 
+]

@@ -18,6 +18,7 @@ import useControllerChild from "../Controllers/ControllerChild";
 import PathLocation from "../Hooks/Location";
 import TitlePage from "../Controllers/TitlePage";
 import inStock from "../assets/en-stock.png";
+import backgroundCard from '../assets/backgroundcard.png'
 import { userController } from "../Controllers/controllerUser";
 
 // Registrar ChartJS + plugin
@@ -228,18 +229,18 @@ function Child() {
       <section
         className={
           path !== "/our_collaborators"
-            ? "bg-white text-gray-400 p-[4rem] md:mt-[25rem] lg:mt-[34%] mt-[25rem]"
+            ? "bg-white text-gray-400 p-[4rem] md:mt-[25rem] lg:mt-[40%] mt-[66%]"
             : "bg-white text-gray-400 p-[4rem]"
         }
         style={{
-          backgroundImage: "url('/src/assets/BackgroundCard.png')",
+          backgroundImage: "url('"+backgroundCard+"')",
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
           width: "100%",
           minHeight: "400px",
         }}
       >
-        {/* ✅ Encabezado */}
+        {/* Encabezado */}
         <div className="max-w-7xl mx-auto lg:pt-[4rem] md:pt-[4rem] pt-[6rem]">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-[#0f5167] mb-2">
@@ -251,7 +252,7 @@ function Child() {
             </p>
           </div>
 
-          {/* ✅ Contadores */}
+          {/* Contadores */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             <CounterCard role="Ventas" count={userCount} />
             <CounterCard role="Clientes" count={userCount + 5} />
@@ -261,7 +262,7 @@ function Child() {
           </div>
         </div>
 
-        {/* ✅ Gráficos (solo en /our_collaborators) */}
+        {/* Gráficos (solo en /our_collaborators) */}
         {path === "/our_collaborators" && (
           <div className="max-w-7xl mx-auto py-[2rem]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">

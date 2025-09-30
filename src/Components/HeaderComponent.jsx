@@ -269,18 +269,15 @@ export default function HeaderComponent() {
   return (
     <header
       className="rounded-lg shadow-sm bg-transparent m-0 w-full relative z-20 top-0 header"
-      id="header"
-    >
+      id="header" >
       <nav className={path!== '/'?"bg-white w-full z-20 top-0 start-0 border-b-[8px] border-b-[#09aed642] ":"bg-[#00000047] w-full z-20 top-0 start-0 border-b-[8px] border-b-[#09aed642] "}>
-        <div className="max-w-screen-xl flex flex-wrap items-center lg:justify-between md:mx-auto md:justify-start md:gap-[1rem]">
-          <Link to="/" className="flex items-center gap-[0.5rem]">
+        <div className="max-w-screen-xl flex flex-wrap items-center lg:justify-between md:mx-auto md:justify-start justify-between md:gap-[0.5rem]">
+          <Link to="/" className="flex items-center justify-between gap-[0.5rem]">
             <img src={logo} className="h-8 logo animate-spin" alt="Solutions Supports" />
-            <span className={path!== '/'?"self-center md:text-2xl text-xl !text-[#00718d] md:relative absolute md:left-[0px] left-[5rem] font-semibold whitespace-nowrap dark:text-[#00718d]":"self-center md:text-2xl text-xl !text-white md:relative lg:absolute md:left-[-2rem] left-[5rem] font-semibold whitespace-nowrap dark:text-[#00718d]"}>
+            <span className={path!== '/'?"self-center md:text-2xl text-[2.5rem] !text-[#00718d] md:relative  md:left-[0px] left-[5rem] font-semibold whitespace-nowrap dark:text-[#00718d]":"self-center md:text-2xl text-[1.6rem] !text-white md:relative  md:left-[-2rem]  font-semibold whitespace-nowrap dark:text-[#00718d]"}>
               Solutions Supports
             </span>
           </Link>
-
-
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse mr-[4px]">
             <button
               data-collapse-toggle="navbar-sticky"

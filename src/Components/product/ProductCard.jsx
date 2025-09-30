@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 //import { useCart } from "../../contexts/CartContext";
 import { toast } from "sonner";
 import Metric from "./Metric";
+import { Timestamp } from 'firebase/firestore';
 export const ProductCard = ({ products }) =>   {
   //const { addItem } = useCart();
   const [isLiked, setIsLiked] = useState(false);
@@ -66,6 +67,34 @@ const handlePrintOne = (product) => {
     printWindow.document.close();
     printWindow.print();
   };
+  const options = {
+  
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const dateTimeFormat3 = new Intl.DateTimeFormat("es-US", options);
+  const formatFirebaseDate = (date) => {
+    if (!date) return "Sin fecha";
+  
+    try {
+      // Caso 1: Firestore Timestamp
+      if (date.toDate) {
+        return dateTimeFormat3.format(date.toDate());
+      }
+  
+      // Caso 2: Date nativo
+      if (date instanceof Date) {
+        return dateTimeFormat3.format(date);
+      }
+  
+      // Caso 3: String o número
+      return dateTimeFormat3.format(new Date(date));
+    } catch (e) {
+      console.error("Error formateando fecha:", e);
+      return "Fecha inválida";
+    }
+  };
   return (
     <>
     
@@ -82,7 +111,7 @@ const handlePrintOne = (product) => {
         {products.map((product,index)=>(
         <div key={index} class="rounded-xl text-card-foreground bg-white shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 " data-testid="product-card-885993af-316d-411b-8bb1-f99034567d4d">
       <div class="p-6">
-        <div class="flex flex-1 flex-col  md:flex-row lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div class="lg:flex block  flex-col-2   lg:items-start lg:justify-between gap-4">
           <div class="flex-1 space-y-3">
             <div class="flex items-start justify-between">
               <div class="flex-1">
@@ -110,18 +139,21 @@ const handlePrintOne = (product) => {
                 style: "currency",
                 currency: "USD",
               }).format(product.Price)} USD`} color="green" />
-              <Metric key="2" label="Stock" value={`${product.Amount.toLocaleString('en-US', {
-                    
- })} unidades`} color="blue" />
+              <Metric key="2" label="Stock" value={product.Amount+ 'unidades'} color="blue" />
               <Metric key="3" label="Valor Total" value={`${new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
               }).format(product.Price * product.Amount)} USD`} color="purple" />
-              <Metric key="4"label="Creado" value={product.created?.toDate().toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  })} color="slate" />
+             <Metric
+  key="4"
+  label="Creado"
+  value={
+    formatFirebaseDate(product.created )
+        
+  }
+  color="slate"
+/>
+
           </div>
         </div>
         <div class="md:space-y-3 space-x-3 flex md:block">

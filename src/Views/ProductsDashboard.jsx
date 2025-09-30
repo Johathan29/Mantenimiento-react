@@ -1,13 +1,13 @@
 import { productController } from '../Controllers/productController';
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../Components/product/ProductCard.jsx';
-
+import { Timestamp } from 'firebase/firestore';
 function ProductsDashboard() {
   useEffect(() => {
     document.title = 'Dashboard';
   }, []);
 
-  const { fetchproduct } = productController;
+  const { fetchproduct,addproduct } = productController;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +19,34 @@ function ProductsDashboard() {
     category: "all",
     inStock: false,
   });
+ async function newsetProducts(event){
+    event.preventDefault();
+    const date=new Date();
+    const timestampDeFecha = Timestamp.fromDate(date);
+    
+    console.log(timestampDeFecha); 
+    const data = new FormData(event.target);
+   const constructProduct={
+    Name: data.get("name"),
+    Amount: Number(data.get("amount")),
+    Price: Number(data.get("price")),
+    Category: data.get("category"),
+    Supplier: data.get("supplier"),
+    Description: data.get("description"),
+    created: timestampDeFecha,
+    image: "", // luego puedes guardar URL de la imagen subida
+  };
 
+  try {
+    const newProduct = await addproduct(constructProduct);
+    setProducts(prev => [...prev, { ...constructProduct, id: newProduct.id }]);
+    event.target.reset(); // limpiar formulario
+  } catch (err) {
+    console.error("Error al crear producto:", err);
+    setError(err);
+  }
+  }
+  
   // scroll infinito
   const [visibleCount, setVisibleCount] = useState(12);
 
@@ -38,6 +65,7 @@ function ProductsDashboard() {
   
     fetchData();
   }, []);
+  
    async function handleAdd()  {
     await productController.addproduct({
       Name: "Nuevo Producto",
@@ -59,7 +87,11 @@ function ProductsDashboard() {
     }
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+    
   }, []);
+ 
+
+  
 
   // aplicar filtros
   const filteredProducts = dataProducts.filter((p) => {
@@ -118,6 +150,7 @@ function ProductsDashboard() {
               </div>
             </div>
             <button
+            data-modal-target="crud-modal" data-modal-toggle="crud-modal"
               class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-primary/90 h-9 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               data-testid="add-product-btn" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -129,6 +162,71 @@ function ProductsDashboard() {
               </svg>
               Nuevo Producto
             </button>
+              <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full">
+                    <div class="relative bg-white rounded-lg shadow-md ">
+                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900 ">
+                                Create New Product
+                            </h3>
+                            <button type="button" class="!text-white !bg-red-300  hover:!bg-red-600 hover:text-white rounded-full text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+
+                        <form class="p-4 md:p-5" onSubmit={newsetProducts}>
+                            <div class="grid gap-4 mb-4 grid-cols-1">
+                                <div class="col-span-2">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Name</label>
+                                    <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Type product name" required=""/>
+                                </div>
+                                <div class="col-span-2 ">
+                                    <label for="Amount" class="block mb-2 text-sm font-medium text-gray-900 ">Amount</label>
+                                    <input type="number" name="amount" id="Amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 0" min={1}  placeholder="$2999" required=""/>
+                                </div>
+                                <div class="col-span-2 ">
+                                    <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Price</label>
+                                    <input type="number" name="price" id="price" pattern="^\d*(\.\d{0,2})?$" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 0" placeholder="$2999" required=""/>
+                                </div>
+                                <div class="col-span-2 ">
+                                    <label for="imagen" class="block mb-2 text-sm font-medium text-gray-900 ">Image of product</label>
+                                    <input type="file" name="imagen" id="imagen" accept="image/png, image/jpeg" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 0" placeholder="$2999" required=""/>
+                                </div>
+                                <div class="col-span-2 ">
+                                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Category</label>
+                                    <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 0">
+                                        <option selected="">Select category</option>
+                                        <option value="TV">TV/Monitors</option>
+                                        <option value="PC">PC</option>
+                                        <option value="GA">Gaming/Console</option>
+                                        <option value="PH">Phones</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2 ">
+                                    <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 ">Supplier</label>
+                                    <select id="supplier" name='supplier' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 0">
+                                        <option selected="">Select category</option>
+                                        <option value="dell-company">DEll Company</option>
+                                        <option value="samsumg">Samsumg</option>
+                                        <option value="apple">Apple</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Product Description</label>
+                                    <textarea id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 " placeholder="Write product description here"></textarea>                    
+                                </div>
+                            </div>
+                            <button type="submit"  class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                                Add new product
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div> 
           </div>
 
           {/* filtros */}
@@ -170,7 +268,7 @@ function ProductsDashboard() {
         </div>
 
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 block flex-wrap items-center justify-between min-h-[23rem]'>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
+          <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 py-6">
             <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
               <div class="p-6">
                 <div class="flex items-center justify-between">
@@ -193,13 +291,12 @@ function ProductsDashboard() {
               </div>
             </div>
             <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-lg">
-              <div class="p-6">
+              <div class="lg:p-6 p-4">
                 <div class="flex items-center justify-between">
                   <div>
                     <p class="text-sm font-medium text-green-600">Total Stock</p>
                     <p class="text-2xl font-bold text-green-900" data-testid="total-stock">{totalStock.toLocaleString('en-US', {
-                    
- })} unidades</p>
+                    })} unidades</p>
                   </div>
                   <div class="bg-green-100 p-3 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

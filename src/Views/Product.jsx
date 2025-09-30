@@ -201,7 +201,7 @@ console.log(datacollection)
                                                 </svg>
                                                 </button>
                                             </div>
-                                            <p className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif]">{product.Description.length<=100 ? product.Description.substring(0, 95): product.Description.substring(0, 95)+'...'}</p>
+                                            <p className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif]">{product.Description}</p>
                                         </div>
                                     </div>
                                      <div className="flex items-center gap-1 mt-2">
@@ -493,4 +493,5 @@ function Star({ filled, onClick }) {
     </svg>
   );
 }
+
 export default ProductComponent;

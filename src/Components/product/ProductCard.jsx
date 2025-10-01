@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Metric from "./Metric";
 import { Timestamp } from 'firebase/firestore';
+import { FormProducts } from "./formProducts";
 export const ProductCard = ({ products }) =>   {
+  const [selectedProduct, setSelectedProduct] = useState(null); // producto que se va a editar
+  const [isModalOpen, setIsModalOpen] = useState(false);
   //const { addItem } = useCart();
   const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -24,42 +27,48 @@ useEffect(()=>{
 }
 ,[])
 const hendleUpdate=(product)=>{
-console.log(product)
+
 }
 const handlePrintOne = (product) => {
    const content = `
-      <html>
-        <head>
-          <title>${product.Name}</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            h1 { text-align: center; }
-            .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-            .logo { font-weight:bold; font-size:18px; }
-            table { width:100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border:1px solid #ccc; padding:8px; text-align:left; }
-            th { background:#f4f4f4; }
-            .footer { margin-top:30px; text-align:right; font-size:14px; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <div class="logo">🛒 Mi Empresa</div>
-            <div><b>Fecha:</b> ${new Date().toLocaleDateString()}</div>
-          </div>
-          <h1>Detalle de Producto</h1>
-          <table>
-            <tr><th>ID</th><td>${product.id}</td></tr>
-            <tr><th>Nombre</th><td>${product.Name}</td></tr>
-            <tr><th>Categoría</th><td>${product.Category}</td></tr>
-            <tr><th>Descripción</th><td>${product.Description}</td></tr>
-            <tr><th>Precio</th><td>$${product.Price}</td></tr>
-            <tr><th>Cantidad</th><td>${product.Amount}</td></tr>
-            <tr><th>Total</th><td>$${product.Price * product.Amount}</td></tr>
-          </table>
-          <div class="footer">Generado automáticamente por el sistema</div>
-        </body>
-      </html>
+   <html>
+   <head>
+     <title>${product.Name}</title>
+     <style>
+       body {font-family:Arial, sans-serif; margin: 20px; }
+       h1 { text-align: left; }
+       .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;padding: 4rem;
+         margin-block: 0px;max-width: 56%;width: 100%;}
+         .container{ padding-inline: 3rem;width: max-content;}
+       .logo { font-weight:bold; font-size:18px; }
+       table { width:max-content; border-collapse: collapse; margin-top: 20px; }
+       th, td { border:1px solid #ccc; padding:8px; text-align:left; max-width:34rem}
+       th { background:#f4f4f4; }
+       .footer { margin-top:30px; text-align:right; font-size:14px; }
+     </style>
+   </head>
+   <body>
+     <div class="header">
+       <div class="logo">🛒 Mi Empresa</div>
+       <div><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</div>
+     </div>
+     <div class="container">
+     <h1>Detalle de Producto</h1>
+     <table>
+       <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Descripción</th><th>Precio</th><th>Cantidad</th><th>Total</th></thead></tr>
+       <tr><td>${product.id}</td><td>${product.Name}</td><td>${product.Category}</td><td>${product.Description}</td><td>$${new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(product.Price)}</td>
+       <td>${product.Amount}</td><td>$${new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(product.Price * product.Amount)}</td></tr>
+     </table>
+     <div class="footer">Generado automáticamente por el sistema</div>
+     </div>
+   </body>
+ </html>
     `;
 
     const printWindow = window.open("", "_blank");
@@ -95,6 +104,17 @@ const handlePrintOne = (product) => {
       return "Fecha inválida";
     }
   };
+  
+  const updateModal = (product) => {
+    setSelectedProduct(product); // guardar el producto que se quiere editar
+    setIsModalOpen(true); // mostrar modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
   return (
     <>
     
@@ -139,11 +159,11 @@ const handlePrintOne = (product) => {
                 style: "currency",
                 currency: "USD",
               }).format(product.Price)} USD`} color="green" />
-              <Metric key="2" label="Stock" value={product.Amount+ 'unidades'} color="blue" />
+              <Metric key="2" label="Stock" value={product.Amount+ ' unidades'} color="blue" />
               <Metric key="3" label="Valor Total" value={`${new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-              }).format(product.Price * product.Amount)} USD`} color="purple" />
+              }).format(product.Price * product.Amount)} `} color="purple" />
              <Metric
   key="4"
   label="Creado"
@@ -157,20 +177,40 @@ const handlePrintOne = (product) => {
           </div>
         </div>
         <div class="md:space-y-3 space-x-3 flex md:block">
-          <button onClick={hendleUpdate(1)} class="w-full  md:w-1/2 !bg-[#66CAF4] border-1 !border-[#bedaeb] !text-[#042A67] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#1697da] hover:!text-white">
+          <button type="button" onClick={() => updateModal(product)} class="w-full  md:w-1/2 !bg-[#66CAF4] border-1 !border-[#bedaeb] !text-[#042A67] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#1697da] hover:!text-white">
            <i class="fa-solid fa-pen-to-square"></i> Editar
           </button> 
+          {/* Modal */}
+          {isModalOpen && (
+        <div
+          id="modalEl"
+          className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-50"
+        >
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <FormProducts product={selectedProduct} onClose={closeModal} />
+            <button
+              onClick={closeModal}
+              className="mt-4 px-4 py-2 bg-gray-300 rounded"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
           <button class="w-full md:w-1/2 !bg-[#F8CECE] border-1 !border-[#bedaeb] !text-[#7D0C0C] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#7D0C0C] hover:!text-white">
            <i class="fa-solid fa-trash"></i> Delete
           </button> 
           <button className="bg-indigo-600 hover:bg-indigo-800 text-white md:w-1/2w-full md:w-1/2 !bg-[#c4c918] border-1 !border-[#bedaeb] !text-[#495408] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#495408] hover:!text-white"
                 onClick={() => handlePrintOne(product)}
-              >
+                >
                <i class="fa-solid fa-print"></i> Imprimir
               </button>
+             
         </div>
        
-        </div></div></div>
+        </div>
+      </div>
+    </div>
         ))}
     </>
   );

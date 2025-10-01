@@ -71,6 +71,7 @@ useEffect(()=>{
       const data = await fetchproduct();
  const filtedata=data.filter(item=>item.Price>=100 && item.Price<= price)
              setCollection(filtedata);
+             console.log(price)
     }
    async function resetColletion(){
       const data = await fetchproduct();
@@ -105,9 +106,9 @@ console.log(datacollection)
                         <div className="rounded-lg  border p-[3rem] bg-[#f0f8ff] space-y-6">
                           <div className="max-w-7xl mx-auto">
                               {path == '/products' && (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-                                <div>
-                                    <label for="default-search" class="mb-2 text-[.875rem] leading-[1.25rem] font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6  p-8 itemsp-center shadow-xl bg-white rounded-md mx-[2rem]">
+                                <div className="block">
+                                    <label for="default-search" class="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif] font-bold">Search</label>
                                     <div class="relative">
                                         <div class="absolute inset-y-0 end-2 flex items-center ps-3 pointer-events-none">
                                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -117,7 +118,7 @@ console.log(datacollection)
                                         <input type="search" id="default-search" class="block w-full h-[2rem] ps-10 text-[.875rem] leading-[1.25rem] text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500" placeholder="Search Mockups, Logos..." required />
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="block items-center gap-4">
                                     <span className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif] font-bold">Categories:</span>
                                     <form action="" className="w-full flex items-center">
                                     <select name="category" id="category" onChange={(e) => filterCategory(e.target.value)} className="block w-full h-[2rem] ps-10 text-[.875rem] leading-[1.25rem] text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500">
@@ -133,17 +134,20 @@ console.log(datacollection)
                                     
                                     </form>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="block items-center gap-4">
                                     <span className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif] font-bold">Prices:</span>
                                     <div class="relative  w-full leading-[1.2]">
                                       <form action="" className="flex items-center gap-[1.2rem]">
                                         <div>
-                                            <input type="range" name="ragePrice" id=""  min={100} max={1500} onClick={(e)=>filterRange(e.target.value)} className="block w-full   text-[.875rem] leading-[1.25rem] text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"/>
-                                            <div className="flex items-center  gap-8">
+                                            <input type="range" name="ragePrice" id=""  min={100} max={10000} onChange={(e)=>filterRange(e.target.value)} className="block w-full   text-[.875rem] leading-[1.25rem] text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500"/>
+                                            <div className="flex items-center justify-between gap-[1.5rem]">
                                               <span class="text-[0.8rem] text-gray-500 dark:text-gray-400  start-0 -bottom-4">$100</span>
-                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400  start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-4">$500</span>
-                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400  start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-4">$1000</span>
-                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400  start-2/3 -translate-x-1/2 rtl:translate-x-1/2  -bottom-4">$1500</span>
+                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400    -bottom-4">$1000</span>
+                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400    -bottom-4">$2000</span>
+                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400    -bottom-4">$5000</span>
+                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400    -bottom-4">$8000</span>
+                                              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400    -bottom-4">$10000</span>
+                                              
                                             </div>
                                         </div>
                                         <input type="reset" value="Reset Price" onClick={()=>resetColletion()} className="text-gray-400 rounded-lg border p-[0.2rem] bg-white"/>
@@ -155,7 +159,7 @@ console.log(datacollection)
                                 </div>
                             </div>
                               )}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 " >
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6  p-8 " >
                             {loading ?
                                 <h1 className="uppercase bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text">
                                     Loading<span className='text-red-500'>...</span>
@@ -181,7 +185,7 @@ console.log(datacollection)
                                 </div>
                                 <div  className="flex flex-col space-y-1.5 p-6 pb-3">
                                     <div className="flex items-start justify-between">
-                                        <div className="flex-1 min-h-[5rem] h-[5rem]">
+                                        <div className="flex-1 min-h-[5rem] h-[7rem]">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <h3 className="tracking-tight text-lg font-semibold text-[#1c1d1e]">{product.Name}</h3>
                                               {/* ❤️ Botón Me gusta (arriba a la derecha) */}
@@ -201,7 +205,7 @@ console.log(datacollection)
                                                 </svg>
                                                 </button>
                                             </div>
-                                            <p className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif]">{product.Description.length<=100 ? product.Description.substring(0, 95): product.Description.substring(0, 95)+'...'}</p>
+                                            <p className="text-[.875rem] leading-[1.25rem] text-[#73888c] !font-[ui-sans-serif]">{product.Description}</p>
                                         </div>
                                     </div>
                                      <div className="flex items-center gap-1 mt-2">
@@ -223,7 +227,10 @@ console.log(datacollection)
                             <div data-lov-id="src/components/ProductCard.tsx:94:6" data-lov-name="CardContent" data-component-path="src/components/ProductCard.tsx" data-component-line="94" data-component-file="ProductCard.tsx" data-component-name="CardContent" data-component-content="%7B%7D" className="p-6 pt-0">
                                 <div  className="flex items-center justify-between mb-4">
                                     <div  className="text-2xl font-bold text-[#00718da3] font-[ui-sans-serif] group-hover:text-[#00718d] transition-smooth">
-                                       {product.Price}
+                                       {`${new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(product.Price)} USD`}
                                     </div>
                                     <div  className={product.Amount>0 ? "inline-flex items-center bg-[#0f930d] font-[ui-sans-serif] rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-white hover:bg-primary/80 text-xs":"inline-flex items-center bg-red-500 font-[ui-sans-serif] rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-white hover:bg-primary/80 text-xs"}>
                                         {product.Amount>0 ? 'in Stock' : 'Agotado'}
@@ -272,7 +279,7 @@ console.log(datacollection)
                             }
                               </div>
                         </div>      
-                        ).slice(0,2)}
+                        )}
                         </div>
                  {isOpen===true  && selectedProduct  ? (
                   <div   class="fixed top-0 left-0 right-0 z-50  bg-[#48474787] w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full z-50">

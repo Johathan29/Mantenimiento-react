@@ -1,7 +1,8 @@
-import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, deleteDoc, doc ,setDoc, updateDoc} from "firebase/firestore";
 import { db } from "../Firebase/congif";
 
 const productCollection = collection(db, "Products");
+const res = await getDocs(productCollection);
 
 export const productModel = {
   // getting all product
@@ -11,14 +12,21 @@ export const productModel = {
   },
 
   // create product
-  async create(product) {
+  async create(codigo,product) {
     const docRef = await addDoc(productCollection, product);
-    return { id: docRef.id, ...product };
+    console.log(codigo)
+    return { id: codigo, ...product };
   },
+    // update product
+    async update(id,product) {
+       const docRef = doc(db, "Products", id);
+    await updateDoc(docRef, product);
+    return { id:id, ...product };
+    },
 
   // delete product
   async remove(id) {
-    await deleteDoc(doc(db, "product", id));
+    await deleteDoc(doc(db, "Products", id));
     return id;
   }
 };

@@ -6,9 +6,11 @@ import { toast } from "sonner";
 import Metric from "./Metric";
 import { Timestamp } from 'firebase/firestore';
 import { FormProducts } from "./formProducts";
+import { productController } from "../../Controllers/productController";
 export const ProductCard = ({ products }) =>   {
   const [selectedProduct, setSelectedProduct] = useState(null); // producto que se va a editar
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {fetchproduct,deleteproduct} = productController;
   //const { addItem } = useCart();
   const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -22,13 +24,17 @@ const [dataProducts,setProducts]=useState([])
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 */
-useEffect(()=>{
 
+useEffect(()=>{
+  async function fetchData() {
+    const data = await fetchproduct();
+    setProducts(data);
+    
+  }
+  fetchData();
 }
 ,[])
-const hendleUpdate=(product)=>{
 
-}
 const handlePrintOne = (product) => {
    const content = `
    <html>
@@ -104,7 +110,16 @@ const handlePrintOne = (product) => {
       return "Fecha inválida";
     }
   };
-  
+  const handleSave = (product) => {
+    if (products.find((p) => p.id === product.id)) {
+      // actualizar producto
+      setProducts((prev) => prev.map((p) => (p.id === product.id ? product : p)));
+    } else {
+      // agregar producto nuevo
+      setProducts((prev) => [...prev, product]);
+    }
+    //setEditingProduct(null); // cerrar modal
+  };
   const updateModal = (product) => {
     setSelectedProduct(product); // guardar el producto que se quiere editar
     setIsModalOpen(true); // mostrar modal
@@ -114,7 +129,10 @@ const handlePrintOne = (product) => {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
+async function productdelete(product){
+await deleteproduct(product.id);
 
+}
   return (
     <>
     
@@ -128,7 +146,7 @@ const handlePrintOne = (product) => {
             {product.inStock ? "Agregar al carrito" : "No disponible"}
           </Button>
         </div> */}
-        {products.map((product,index)=>(
+        {dataProducts.map((product,index)=>(
         <div key={index} class="rounded-xl text-card-foreground bg-white shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 " data-testid="product-card-885993af-316d-411b-8bb1-f99034567d4d">
       <div class="p-6">
         <div class="lg:flex block  flex-col-2   lg:items-start lg:justify-between gap-4">
@@ -159,21 +177,16 @@ const handlePrintOne = (product) => {
                 style: "currency",
                 currency: "USD",
               }).format(product.Price)} USD`} color="green" />
-              <Metric key="2" label="Stock" value={product.Amount+ ' unidades'} color="blue" />
+              <Metric key="2" label="Stock" value={product.Amount} color="blue" />
               <Metric key="3" label="Valor Total" value={`${new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-              }).format(product.Price * product.Amount)} `} color="purple" />
+              }).format(product.Price * product.Amount)} `+'USD'} color="purple" />
              <Metric
-  key="4"
-  label="Creado"
-  value={
-    formatFirebaseDate(product.created )
-        
-  }
-  color="slate"
-/>
-
+                    key="4"
+                    label="Creado"
+                    value={formatFirebaseDate(product.created )}
+                    color="slate"/>
           </div>
         </div>
         <div class="md:space-y-3 space-x-3 flex md:block">
@@ -184,20 +197,15 @@ const handlePrintOne = (product) => {
           {isModalOpen && (
         <div
           id="modalEl"
-          className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-50"
+          className="fixed top-0 left-0 w-full h-full bg-[#2726265c] flex justify-center items-center z-50"
         >
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-            <FormProducts product={selectedProduct} onClose={closeModal} />
-            <button
-              onClick={closeModal}
-              className="mt-4 px-4 py-2 bg-gray-300 rounded"
-            >
-              Cerrar
-            </button>
+            <FormProducts product={selectedProduct} onClose={closeModal} onSave={handleSave}/>
+            
           </div>
         </div>
       )}
-          <button class="w-full md:w-1/2 !bg-[#F8CECE] border-1 !border-[#bedaeb] !text-[#7D0C0C] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#7D0C0C] hover:!text-white">
+          <button onClick={(()=>productdelete(product))} class="w-full md:w-1/2 !bg-[#F8CECE] border-1 !border-[#bedaeb] !text-[#7D0C0C] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#7D0C0C] hover:!text-white">
            <i class="fa-solid fa-trash"></i> Delete
           </button> 
           <button className="bg-indigo-600 hover:bg-indigo-800 text-white md:w-1/2w-full md:w-1/2 !bg-[#c4c918] border-1 !border-[#bedaeb] !text-[#495408] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#495408] hover:!text-white"

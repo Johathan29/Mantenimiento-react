@@ -7,6 +7,7 @@ function ProductsDashboard() {
   useEffect(() => {
     document.title = 'Dashboard';
   }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { fetchproduct,addproduct } = productController;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,9 +19,9 @@ function ProductsDashboard() {
     category: "all",
     inStock: false,
   });
-  
+
   // scroll infinito
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(5);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -87,7 +88,24 @@ function ProductsDashboard() {
   const totalValue = dataProducts.reduce((sum, p) => sum + p.Price * p.Amount, 0);
 
   const categories = ["all", ...new Set(dataProducts.map(p => p.Category))];
-
+  const updateModal = () => {
+   //setSelectedProduct(product); // guardar el producto que se quiere editar
+    setIsModalOpen(true); // mostrar modal
+  };
+  const handleSave = (product) => {
+    if (productsToShow.find((p) => p.id === product.id)) {
+      // actualizar producto
+      setProducts((prev) => prev.map((p) => (p.id === product.id ? product : p)));
+    } else {
+      // agregar producto nuevo
+      setProducts((prev) => [...prev, product]);
+    }
+    //setEditingProduct(null); // cerrar modal
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
   return (
     <>
       <section className=' bg-[#b9d7f15e] '>
@@ -121,7 +139,7 @@ function ProductsDashboard() {
               </div>
             </div>
             <button
-            data-modal-target="crud-modal" data-modal-toggle="crud-modal"
+            onClick={(()=>updateModal())}
               class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-primary/90 h-9 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               data-testid="add-product-btn" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -133,10 +151,17 @@ function ProductsDashboard() {
               </svg>
               Nuevo Producto
             </button>
-            <div id="crud-modal" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-              <FormProducts ></FormProducts>
+            {isModalOpen && (
+            <div
+            id="modalEl"
+            className="fixed top-0 left-0 w-full h-full bg-[#2726265c] flex justify-center items-center z-50"
+          >
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+              <FormProducts product={productsToShow} onClose={closeModal} onSave={handleSave}/>
+              
             </div>
-            
+          </div>
+            )}
               
           </div>
 
@@ -269,7 +294,10 @@ function ProductsDashboard() {
           </div>
           {/* listado */}
           <div className=" space-y-4">
-            {loading && <p>Cargando productos...</p>}
+            {loading && <div className='rounded-xl text-card-foreground bg-white shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-[6rem] my-[2rem]'>
+                            <div class="loading-text">Loading<span class="dots"></span>
+                            </div>
+                            </div>}
             {error && <p className="text-red-500">Error cargando productos</p>}
             {!loading && productsToShow.length === 0 && 
             <p className="p-[2rem] bg-white text-red-500 text-[2rem] flex rounded-[12px] items-end gap-2 " >

@@ -8,10 +8,12 @@ export const productController = {
     
   },
 
-  async addproduct(product) {
-    return await productModel.create(product);
+  async addproduct(codigo,product) {
+    return await productModel.create(codigo,product);
   },
-
+  async updateproduct(id,product) {
+    return await productModel.update(id,product);
+  },
   async deleteproduct(id) {
     return await productModel.remove(id);
   },

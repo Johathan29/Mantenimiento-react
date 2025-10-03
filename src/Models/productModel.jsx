@@ -14,7 +14,7 @@ export const productModel = {
   // create product
   async create(codigo,product) {
     const docRef = await addDoc(productCollection, product);
-    console.log(codigo)
+    
     return { id: codigo, ...product };
   },
     // update product
@@ -26,7 +26,13 @@ export const productModel = {
 
   // delete product
   async remove(id) {
-    await deleteDoc(doc(db, "Products", id));
+   
+    const querySnapshot = await getDocs(collection(db, "Products"));
+    querySnapshot.filter((doc) => {
+      // Aquí doc.id es el ID del DOCUMENTO, no de la colección.
+      
+      console.log( doc.data().id ===id ? doc.id : '');
+    });
     return id;
   }
 };

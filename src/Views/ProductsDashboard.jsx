@@ -2,6 +2,8 @@ import { productController } from '../Controllers/productController';
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../Components/product/ProductCard.jsx';
 import {FormProducts} from '../Components/product/formProducts.jsx';
+import ChartProducts from '../Components/product/chartProducts.jsx';
+import { exportCSV,exportPDF,exportExcel } from '../Components/product/exports.jsx';
 import { Timestamp } from 'firebase/firestore';
 function ProductsDashboard() {
   useEffect(() => {
@@ -274,19 +276,15 @@ function ProductsDashboard() {
                 <div class="flex space-x-2 items-center ">
                   
                     <div>
-                      <button className='!text-green-300 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-500 !border-0'> 
-                        <i class="fa-solid fa-file-csv"></i>
-                      </button>
-                    </div>
-                    <div>
-                      <button title='Exports to Excel' className='!text-green-500 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-700 !border-0'>
-                        <i class="fa-solid fa-file-excel"></i>
-                      </button>
-                    </div>
-                    <div>
-                      <button className='!text-red-400 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-red-700 !border-0'>
-                      <i class="fa-solid fa-file-pdf"></i>
-                      </button>
+                    <button onClick={()=>exportCSV(dataProducts)} className="text-green-500 text-2xl">
+    <i class="fa-solid fa-file-csv"></i>
+  </button>
+  <button onClick={()=>exportExcel(dataProducts)} className="text-green-600 text-2xl">
+    <i class="fa-solid fa-file-excel"></i>
+  </button>
+  <button onClick={()=>exportPDF(dataProducts)} className="text-red-500 text-2xl">
+    <i class="fa-solid fa-file-pdf"></i>
+  </button>
                     </div>
                 </div>
               </div>
@@ -309,6 +307,7 @@ function ProductsDashboard() {
               </p>
             )}
           </div>
+          <ChartProducts/>
         </div>
       </section>
     </>

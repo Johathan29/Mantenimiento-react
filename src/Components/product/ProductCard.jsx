@@ -83,7 +83,7 @@ const handlePrintOne = (product) => {
     printWindow.print();
   };
   const options = {
-  
+
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -91,7 +91,6 @@ const handlePrintOne = (product) => {
   const dateTimeFormat3 = new Intl.DateTimeFormat("es-US", options);
   const formatFirebaseDate = (date) => {
     if (!date) return "Sin fecha";
-  
     try {
       // Caso 1: Firestore Timestamp
       if (date.toDate) {
@@ -129,8 +128,8 @@ const handlePrintOne = (product) => {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
-async function productdelete(product){
-await deleteproduct(product.id);
+async function productdelete(id){
+    await deleteproduct(id);
 
 }
   return (
@@ -205,7 +204,7 @@ await deleteproduct(product.id);
           </div>
         </div>
       )}
-          <button onClick={(()=>productdelete(product))} class="w-full md:w-1/2 !bg-[#F8CECE] border-1 !border-[#bedaeb] !text-[#7D0C0C] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#7D0C0C] hover:!text-white">
+          <button onClick={(()=>productdelete(product.id))} class="w-full md:w-1/2 !bg-[#F8CECE] border-1 !border-[#bedaeb] !text-[#7D0C0C] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#7D0C0C] hover:!text-white">
            <i class="fa-solid fa-trash"></i> Delete
           </button> 
           <button className="bg-indigo-600 hover:bg-indigo-800 text-white md:w-1/2w-full md:w-1/2 !bg-[#c4c918] border-1 !border-[#bedaeb] !text-[#495408] text-lg py-[1.2rem] px-[1.2rem] !font-bold hover:!bg-[#495408] hover:!text-white"

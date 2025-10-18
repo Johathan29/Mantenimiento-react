@@ -4,10 +4,10 @@ import Sony from '../assets/Sony_logo.svg'
 import Dell from '../assets/Dell_Logo.svg'
 import HP from '../assets/HP_logo_2012.svg'
 import Lenovo from '../assets/Lenovo_logo_2015.svg'
-import samsumg from '../assets/samsung-Logo.svg'
+//import samsumg from '../assets/samsung-Logo.svg'
 const brands = [
   { name: "Apple", src: apple },
-  { name: "Samsung", src: samsumg },
+  //{ name: "Samsung", src: samsumg },
   { name: "Sony", src:Sony },
   { name: "Dell", src: Dell },
   { name: "HP", src: HP },
@@ -66,5 +66,6 @@ const BrandsCarousel = () => {
     </section>
   );
 };
+
 
 export default BrandsCarousel;

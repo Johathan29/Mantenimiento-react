@@ -23,21 +23,33 @@ import Homedashboard from "../Views/HomeDashboard.jsx";
 import EditUser from "../Views/EditUser.jsx";
 import ProductsDashboard from "../Views/ProductsDashboard.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import Login from "../Components/FormLogin.jsx";
+import Register from "../Components/Register.jsx";
+import Carts from "../Views/carts.jsx";
+import AdminRolesPanel from "../Views/gestionUser.jsx";
+import About from "../Views/About.jsx";
+import FormUpdateUsers from "../Views/FormUpdateUser.jsx";
 const userLogin=localStorage.getItem('user')
 export const 
+ 
 routes = [
   {
     path: "/",
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "our_collaborators", element: <Child /> },
-      { path: "our_collaborators/:id", element: <DetailChild /> },
+      { path: "our-collaborators", element: <Child /> },
+      { path: "our-collaborators/:id", element: <DetailChild /> },
       { path: "products", element: <ProductComponent /> },
+      { path: "carts", element: <Carts /> },
       { path: "products/:id", element: <DetailProduct /> },
       { path: "inbox", element: <MessagePage /> },
       { path: "inbox/:id", element: <MessageDetailPage /> },
-      { path: "contact_page", element: <ContactPage /> },
+      { path: "contact", element: <ContactPage /> },
+      { path: "login", element: <Login/> },
+      { path:"/register", element:<Register />},
+      { path:"/about", element:<About />},
+      { path:"/form-update-user", element:<FormUpdateUsers />},
       { path: "*", element: <NoPage /> },
     ],
   },
@@ -50,6 +62,7 @@ routes = [
       { index: true, element:  <Homedashboard />  },
       { path: "edituser", element: <EditUser /> },
       { path: "products", element: <ProductsDashboard /> },
+       { path: "users", element: <AdminRolesPanel /> },
     ]
  }
 ];

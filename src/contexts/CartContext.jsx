@@ -1,123 +1,104 @@
-import React, { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import {auth}  from "../Firebase/congif";
+import api from "../Services/api";
 
-// Reducer
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case "ADD_ITEM": {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-
-      if (existingItem) {
-        const updatedItems = state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-
-        return {
-          ...state,
-          items: updatedItems,
-          total: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-          itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-        };
-      }
-
-      const newItems = [...state.items, { ...action.payload, quantity: 1 }];
-      return {
-        ...state,
-        items: newItems,
-        total: newItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-        itemCount: newItems.reduce((sum, item) => sum + item.quantity, 0),
-      };
-    }
-
-    case "REMOVE_ITEM": {
-      const newItems = state.items.filter(item => item.id !== action.payload);
-      return {
-        ...state,
-        items: newItems,
-        total: newItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-        itemCount: newItems.reduce((sum, item) => sum + item.quantity, 0),
-      };
-    }
-
-    case "UPDATE_QUANTITY": {
-      if (action.payload.quantity <= 0) {
-        return cartReducer(state, { type: "REMOVE_ITEM", payload: action.payload.id });
-      }
-
-      const updatedItems = state.items.map(item =>
-        item.id === action.payload.id
-          ? { ...item, quantity: action.payload.quantity }
-          : item
-      );
-
-      return {
-        ...state,
-        items: updatedItems,
-        total: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-        itemCount: updatedItems.reduce((sum, item) => sum + item.quantity, 0),
-      };
-    }
-
-    case "CLEAR_CART":
-      return {
-        items: [],
-        total: 0,
-        itemCount: 0,
-      };
-
-    default:
-      return state;
-  }
-};
-
-// Context
 const CartContext = createContext();
 
-// Provider
-export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, {
-    items: [],
-    total: 0,
-    itemCount: 0,
-  });
+export function CartProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(false);
+const decreaseQuantity = async (productId) => {
+  if (!user) return;
 
-  const addItem = (product) => {
-    dispatch({ type: "ADD_ITEM", payload: product });
+  // Busca el producto actual
+  const product = cart.find((p) => p.id === productId.id);
+  if (!product) return;
+
+  // Si la cantidad es 1 → eliminar producto
+  if (product.quantity <= 1) {
+    await removeFromCart(productId);
+  } else {
+    try {
+      const res = await api.put(`/cart/${user.uid}/${productId}`, {
+        quantity: product.quantity - 1,
+      });
+      setCart(res.data.items);
+    } catch (err) {
+      console.error("Error al disminuir cantidad:", err);
+    }
+  }
+};
+  // Detectar sesión de Firebase
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        await loadCart(currentUser.uid);
+      } else {
+        setCart([]);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const loadCart = async (userId) => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/cart/${userId}`);
+      setCart(res.data);
+    } catch (err) {
+      console.error("Error al cargar carrito:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeItem = (id) => {
-    dispatch({ type: "REMOVE_ITEM", payload: id });
+  const addToCart = async (product) => {
+    if (!user) {
+      alert("Debes iniciar sesión para agregar productos.");
+      return;
+    }
+
+    const res = await api.post(`/cart`, {
+      userId: user.uid,
+      product: { ...product, quantity: 1 },
+    });
+
+    setCart(res.data.items);
+  };
+ const removeToCart = async (productId) => {
+    if (!user) {
+      alert("Debes iniciar sesión para agregar productos.");
+      return;
+    }
+
+   await api.delete(`/cart/${productId}`);
+    await loadCart(user.uid);
+   
+
+    setCart(res.data.items);
+  };
+  const removeFromCart = async (productId) => {
+    if (!user) return;
+    await api.delete(`/cart/${user.uid}/${productId}`);
+    await loadCart(user.uid);
   };
 
-  const updateQuantity = (id, quantity) => {
-    dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
-  };
-
-  const clearCart = () => {
-    dispatch({ type: "CLEAR_CART" });
+  const clearCart = async () => {
+    if (!user) return;
+    await api.delete(`/cart/${user.uid}`);
+    setCart([]);
   };
 
   return (
     <CartContext.Provider
-      value={{
-        ...state,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-      }}
+      value={{ user, cart, loading, addToCart, removeFromCart, clearCart,removeToCart,decreaseQuantity }}
     >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
-// Hook
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
-  return context;
-};
+export const useCart = () => useContext(CartContext);

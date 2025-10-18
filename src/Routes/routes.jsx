@@ -25,7 +25,7 @@ import ProductsDashboard from "../Views/ProductsDashboard.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "../Components/FormLogin.jsx";
 import Register from "../Components/Register.jsx";
-import Carts from "../Views/carts.jsx";
+//import Carts from "../Views/carts.jsx";
 import AdminRolesPanel from "../Views/gestionUser.jsx";
 import About from "../Views/About.jsx";
 import FormUpdateUsers from "../Views/FormUpdateUser.jsx";
@@ -41,7 +41,7 @@ routes = [
       { path: "our-collaborators", element: <Child /> },
       { path: "our-collaborators/:id", element: <DetailChild /> },
       { path: "products", element: <ProductComponent /> },
-      { path: "carts", element: <Carts /> },
+      //{ path: "carts", element: <Carts /> },
       { path: "products/:id", element: <DetailProduct /> },
       { path: "inbox", element: <MessagePage /> },
       { path: "inbox/:id", element: <MessageDetailPage /> },
@@ -66,3 +66,4 @@ routes = [
     ]
  }
 ];
+

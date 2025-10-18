@@ -1,5 +1,5 @@
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../Firebase/congif";
+import { db } from "../Firebase/congif.js";
 
 const usersCollection = collection(db, "users");
 

@@ -1,11 +1,16 @@
 @import "tailwindcss";
 @import "flowbite/src/themes/default";
-body,h1,span,p,h2,h3,h4,h5,h6{
-  font-family: ui-sans-serif;
-  
+.text-primary{
+  color: #00a6f4!important;
+}
+.text-muted-foreground{
+  color: #efefef;
+}
+.font-display {
+    font-family: 'Inter';
 }
 #root {
-  
+  font-family: Inter,sans-serif;
   margin: 0;
  /* padding: 2rem;*/
   width: 100%;
@@ -39,12 +44,18 @@ ease-out 0s 1 normal none running scale-in;
 }
 }
 a.buttonRef{
-  background-color: transparent;
-  color: #9b59b6;
-  border: 2px solid #9b59b6;
+  background-color: white;
+  color: #00a6f4;
+  border: 2px solid #00a6f4;
   position: relative;
 }
-
+.text-muted-foreground{
+      color: hsl(225 10% 45%);
+}
+.title{
+          background-image: linear-gradient(135deg, hsl(194.36deg 100% 39.77%) 0%, hsl(211.98deg 79.83% 69.51%) 50%, hsl(0deg 0% 92.42%) 100%);
+    background-clip: text;
+}
 a.buttonRef::after
 {
  content: "";
@@ -53,11 +64,35 @@ a.buttonRef::after
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #9b59b6;
+  border-radius: 10px;
+  background-color: #00a6f4;
   transition: width 0.3s ease;
-  z-index: 1;
+  z-index: -1;
  }
 a.buttonRef:hover::after
+{
+ width: 100%;
+}
+div.buttonRef{
+  background-color: white;
+  color: #00a6f4;
+  border: 0px solid #00a6f4;
+  position: relative;
+}
+div.buttonRef::after
+{
+ content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background-color: #00a6f4;
+  transition: width 0.3s ease;
+  z-index: -1;
+ }
+div.buttonRef:hover::after
 {
  width: 100%;
 }
@@ -67,19 +102,19 @@ a.buttonRef:hover
 }
 a.buttonRef2{
    position: relative;
-  padding: 1rem 2rem;
+  padding: 1.2em 0.2em;
   font-size: 1rem;
   font-weight: 600;
   color: white;
   /*background: none;*/
   border: 2px solid #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 .liquid {
-  background: linear-gradient(#fff 0 0) no-repeat calc(200% - var(--p, 0%))
+  background: linear-gradient(180deg,rgba(0, 166, 244, 0.9) 0%, rgba(4, 135, 196, 1) 50%, rgba(31, 123, 242, 0.53) 100%) no-repeat calc(200% - var(--p, 0%))
     100% / 200% var(--p, 0.2em);
     
   transition: 0.3s var(--t, 0s),
@@ -89,7 +124,7 @@ a.buttonRef2{
 .liquid:hover {
   --p: 100%;
   --t: 0.3s;
-  color:blue!important;
+  color:rgb(255, 255, 255)!important;
  border: 2px #ffffff solid;
 }
 
@@ -101,9 +136,25 @@ a.buttonRef2{
     transform: rotate(360deg);
   }
 }
-li a.active {
-    background-color: #01718d;
-    color: #fff!important;
+nav ul li a, footer ul li a{
+  color: #fff!important;
+}
+.text-muted-foreground{
+  color: #ffffff;
+}
+nav ul li a.active, footer ul li a.active {
+    background-color: transparent!important;
+    color: #0aaefa!important;
+    
+}
+.text-foreground{
+  color: rgb(255, 255, 255);
+}
+.shadow-glow {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6); /* azul similar al 'text-blue-500' */
+}
+.cardShadow{
+  filter: drop-shadow(black 2px 4px 6px);
 }
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
@@ -142,6 +193,63 @@ div#dropdownNavbar::before {
   background: white;
   font-size: 21px;
 }
+.example-4 {
+  outline-width: 1px;
+  outline-offset: 0;
+  outline-color: rgba(0, 130, 206, 0.75);
+  outline-style: solid;
+  animation: animateOutline 4s ease infinite;
+}
+.dots::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    text-align: left;
+    animation: dots 1.5s steps(4, end) infinite;
+}
+.bg-hero-gradient{
+  background: linear-gradient(135deg, hsl(238 60% 35%) 0%, hsl(260 60% 45%) 50%, hsl(195 100% 50%) 100%);;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '';
+    }
+    40% {
+        content: '.';
+    }
+    60% {
+        content: '..';
+    }
+    80%, 100% {
+        content: '...';
+    }
+}
+@keyframes animateOutline {
+  0% {
+    outline-width: 1px;
+    outline-offset: 0;
+    outline-color: rgba(0, 130, 206, 0);
+  }
+
+  10% {
+    outline-color: rgba(0, 130, 206, 0.75);
+  }
+
+  /* The animation finishes at 50% */
+  50% {
+    outline-width: 7px;
+    outline-offset: 4px;
+    outline-color: rgba(0, 130, 206, 0);
+  }
+
+  100% {
+    outline-width: 7px;
+    outline-offset: 4px;
+    outline-color: rgba(102, 102, 102, 0);
+  }
+}
+
 .birthday{
   font-size: 3rem;
       font-weight: bold;
@@ -218,6 +326,71 @@ button:hover {
     top: 0px;
     height: 100%;
 }
+.slide img {
+  width: 100px;
+  height: 100px;
+  animation: scroll 10s linear infinite;
+}
+
+.slide-track {
+  width: 90%;
+  display: flex;
+  gap: 3em;
+  overflow: hidden;
+}
+
+.slider {
+  margin-top: 70px;
+ 
+
+}
+button{
+
+  background-color: #00718d!important;
+}
+button:hover{
+  background-color: #fff!important;
+  color: #00718d;
+  border-color: #00718d!;
+}
+
+
+@keyframes scroll {
+  0% {transform: translateX(0);}
+  100% {transform: translatex(100%)}
+}
+
+.text-transparent {
+    color: transparent;
+}
+
+
+.bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.to-accent {
+    --tw-gradient-to: hsl(var(--accent)) var(--tw-gradient-to-position);
+}
+
+.via-primary\/80 {
+    --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--primary) / 0.8) var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
+.from-primary {
+    --tw-gradient-from: hsl(var(--primary)) var(--tw-gradient-from-position);
+    --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+
+
 /*
 .formulario {
   width: 100%;

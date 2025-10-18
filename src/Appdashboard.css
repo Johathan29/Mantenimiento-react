@@ -10,7 +10,30 @@ body,h1{
  /* padding: 2rem;*/
   width: 100%;
 }
+ .remove-outline{
+        position: absolute;
+        top: 22px;
+        left: 40px;
+    }
 
+  .arrow-down-outline {
+        position: absolute;
+        top: 8px;
+        left: 40px;
+        transform: top 1s ease;
+    }
+
+    .btn:hover .arrow-down-outline {
+        top: 13px;
+    }
+
+    .arrow-down-outline,.remove-outline  {
+        color: #fff;
+        font-size: 1.5em;
+        transition: all 0.5s linear;
+    }
+
+    
 /*
 .logo {
   height: 6em;

@@ -15,7 +15,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState, useRef } from "react";
 import useControllerChild from "../Controllers/ControllerChild";
-import PathLocation from "../Hooks/Location";
+import PathLocation from "../hooks/Location";
 import TitlePage from "../Controllers/TitlePage";
 import inStock from "../assets/en-stock.png";
 import backgroundCard from '../assets/backgroundcard.png'
@@ -229,16 +229,9 @@ function Child() {
       <section
         className={
           path !== "/our_collaborators"
-            ? "bg-white text-gray-400 p-[4rem] md:mt-[25rem] lg:mt-[40%] mt-[66%]"
+            ? "bg-white text-sky-500 p-[4rem] "
             : "bg-white text-gray-400 p-[4rem]"
         }
-        style={{
-          backgroundImage: "url('"+backgroundCard+"')",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-          width: "100%",
-          minHeight: "400px",
-        }}
       >
         {/* Encabezado */}
         <div className="max-w-7xl mx-auto lg:pt-[4rem] md:pt-[4rem] pt-[6rem]">

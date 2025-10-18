@@ -2,7 +2,10 @@ import { productController } from '../Controllers/productController';
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../Components/product/ProductCard.jsx';
 import {FormProducts} from '../Components/product/formProducts.jsx';
+import ChartProducts from '../Components/product/chartProducts.jsx';
+import { exportCSV,exportPDF,exportExcel } from '../Components/product/exports';
 import { Timestamp } from 'firebase/firestore';
+import { ContactForm } from '../Controllers/NotificarEmail.jsx';
 function ProductsDashboard() {
   useEffect(() => {
     document.title = 'Dashboard';
@@ -106,6 +109,8 @@ function ProductsDashboard() {
     setIsModalOpen(false);
     setSelectedProduct(null);
   };
+  
+
   return (
     <>
       <section className=' bg-[#b9d7f15e] '>
@@ -274,19 +279,24 @@ function ProductsDashboard() {
                 <div class="flex space-x-2 items-center ">
                   
                     <div>
-                      <button className='!text-green-300 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-500 !border-0'> 
+                      <button onClick={()=>exportCSV(dataProducts)} className='focus:!outline-none !text-green-300 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-500 !border-0'> 
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <hr/>
                         <i class="fa-solid fa-file-csv"></i>
                       </button>
                     </div>
                     <div>
-                      <button title='Exports to Excel' className='!text-green-500 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-700 !border-0'>
+                      <button title='Exports to Excel' onClick={()=>exportExcel(dataProducts)} className='focus:!outline-none  !text-green-500 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-700 !border-0'>
                         <i class="fa-solid fa-file-excel"></i>
                       </button>
                     </div>
                     <div>
-                      <button className='!text-red-400 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-red-700 !border-0'>
+                      <button onClick={()=>exportPDF(dataProducts)} className='!text-red-400 !bg-transparent !rounded-0 focus:!outline-none border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-red-700 !border-0'>
                       <i class="fa-solid fa-file-pdf"></i>
                       </button>
+                    </div>
+                    <div>
+           
                     </div>
                 </div>
               </div>
@@ -309,6 +319,8 @@ function ProductsDashboard() {
               </p>
             )}
           </div>
+          <ChartProducts/>
+          <ContactForm></ContactForm>
         </div>
       </section>
     </>

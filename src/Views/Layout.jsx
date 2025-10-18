@@ -2,7 +2,7 @@ import { Outlet, Link, useParams } from 'react-router-dom';
 import HeaderComponent from '../Components/HeaderComponent';
 import FooterComponent from '../Components/FooterComponent';
 import SliderShow from '../Components/SliderComponent';
-import PathLocation from '../Hooks/Location';
+import PathLocation from '../hooks/Location';
 export default function Layout() {
   const path=PathLocation();
   return (
@@ -15,13 +15,13 @@ export default function Layout() {
 <SliderShow />
 </div>
 
-<section className='bg-[#0f5167]'>
+<main className='bg-white'>
       
         <div className="h-full min-h-[28rem] " >
           <Outlet />
         
       </div>
-      </section>
+      </main>
       <FooterComponent></FooterComponent>
     </>
   );

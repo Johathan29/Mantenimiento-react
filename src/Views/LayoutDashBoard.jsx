@@ -2,7 +2,7 @@ import { Outlet, Link, useParams } from 'react-router-dom';
 import DashboardComponent from '../Components/DashBoardComponent';
 import FooterComponent from '../Components/FooterComponent';
 import   '../Appdashboard.css';
-import PathLocation from '../Hooks/Location';
+import PathLocation from '../hooks/Location';
 export default function Layoutdashboard() {
   const path=PathLocation();
   return (

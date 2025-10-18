@@ -15,7 +15,7 @@ import {
 import reciente from '../assets/factura.png'
 import { Line, Doughnut } from "react-chartjs-2";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../Firebase/congif";
+import { db } from "../Firebase/congif.js";
 
 ChartJS.register(
   Title,

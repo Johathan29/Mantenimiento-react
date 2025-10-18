@@ -1,6 +1,6 @@
 import { productModel } from "../Models/productModel";
 import { useState } from "react";
-  
+
 export const productController = {
 
   async fetchproduct() {
@@ -12,6 +12,10 @@ export const productController = {
     return await productModel.create(codigo,product);
   },
   async updateproduct(id,product) {
+   await sendEmail({
+    name: product.Name,
+    notes: `Se ha registrado un nuevo producto en la categoría ${product.Category} con precio $${product.Price}`,
+  });
     return await productModel.update(id,product);
   },
   async deleteproduct(id) {

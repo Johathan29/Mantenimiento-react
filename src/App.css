@@ -169,15 +169,8 @@ nav ul li a.active, footer ul li a.active {
 .read-the-docs {
   color: #888;
 }
-a{
-  color: #00718d;
-}
-button{
-  background-color: #00718d;
-  color: #fff;
-  padding: .5rem;
-  font-size: small;
-}
+
+
 
 div.bg-card:hover h3.font-bold.text-lg.text-\[\#21242c\] {
   color: #00728f;
@@ -312,11 +305,7 @@ tbody {
 svg.lucide.lucide-circle-check-big.w-4.h-4.text-primary.flex-shrink-0, svg.lucide.lucide-circle-check-big.w-4.h-4.text-accent.flex-shrink-0 {
     stroke: #00718d;
 }
-button:hover {
-    border-color: #00718d;
-    color: #00718d;
-    background: white;
-}
+
 .absolute.bg-cover.top-\[0px\].w-full.bg-no-repeat.bg-fixed.bg-center::before {
     position: absolute;
     display: block;
@@ -343,15 +332,6 @@ button:hover {
   margin-top: 70px;
  
 
-}
-button{
-
-  background-color: #00718d!important;
-}
-button:hover{
-  background-color: #fff!important;
-  color: #00718d;
-  border-color: #00718d!;
 }
 
 
@@ -389,39 +369,3 @@ button:hover{
     background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
-
-
-/*
-.formulario {
-  width: 100%;
-  max-width: 400px;
-  overflow: hidden;
-  background: white;
-  padding: 0 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-
-  height: 0;
-  opacity: 0;
-  transition: height 0.4s ease, opacity 0.4s ease;
-}
-
-.formulario.activo {
-  height: 200px; /* Ajusta según el contenido 
-  opacity: 1;
-}
-
-div.z-10.divide-y.divide-gray-100.rounded-lg.shadow-sm.w-44.w-auto.block{
-  width: max-content;
-  animation: showMenu 0.2s;
-}
-@keyframes showMenu{
-  from {
-    width: 0%;
-    height: 0px;
-  }
-  to {
-     width: max-content;
-    height: max-content;
-  }
-}*/

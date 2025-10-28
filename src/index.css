@@ -135,13 +135,6 @@ button:focus-visible {
 
 .comment-bubble::before {
   content: '';
-    /* position: absolute; */
-    /* top: 100%; */
-    /* left: 20px; */
-    /* border-width: 10px; */
-    /* border-style: solid; */
-    /* border-color: #f0f0f0 transparent transparent transparent; */
-    /* width: 0; */
     height: 0;
     border-left: 2vh solid transparent;
     border-right: 2vh solid transparent;
@@ -240,4 +233,4 @@ p.text-md.font-normal.text-gray-900.p-\[0\.9rem\].emisor:after {
     left: 26.5%;
     transform: rotate(220deg);
     content: "";
-}
+}*/

@@ -1,6 +1,7 @@
 // src/pages/About.jsx
 import { motion } from "framer-motion";
 import aboutImg from "../assets/imgAbout.jpeg"
+import { Link } from "react-router-dom";
 export default function About() {
      const timeline = [
     {
@@ -45,12 +46,13 @@ export default function About() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.25),_transparent_60%)]" />
 
       <div className="relative container mx-auto px-6 md:px-12 lg:px-20 text-center">
-        <div className="flex items-center gap-4">        {/* Encabezado */}
-            <div className="max-w-2xl mx-auto"><motion.h1
+        <div className="md:flex items-center gap-4">        {/* Encabezado */}
+            <div className="max-w-2xl mx-auto">
+              <motion.h1
             initial={{ opacity: 0, y: -40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-4xl md:text-5xl font-extrabold mb-4 !bg-transparent "
+            className="!text-3xl md:!text-5xl font-extrabold mb-4 !bg-transparent "
             >
             <span className="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent  ">About Our Tech Store</span>
             </motion.h1>
@@ -59,23 +61,23 @@ export default function About() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
-            className="max-w-2xl mx-auto text-lg text-gray-500 mb-12"
+            className="max-w-md mx-auto text-md md:text-md text-gray-500 mb-12"
             >
             We are passionate about bringing you the latest and most reliable
             technology products. From laptops and accessories to cutting-edge
             gadgets, our mission is to empower your digital lifestyle.
             </motion.p>
             </div>
-            <div className="relative">
-                <img className="rounded-2xl shadow-2xl w-full h-[400px] object-cover" src={aboutImg}/> 
-                <div className="absolute -bottom-6 -left-6 bg-white  p-6 rounded-xl shadow-xl">
+            <div className="relative max-w-sm  mx-auto">
+                <img className="rounded-2xl shadow-2xl w-[25rem] md:w-full h-[400px] object-cover " src={aboutImg}/> 
+                <div className="absolute md:-bottom-14 md:-left-[6rem] -bottom-14 -left-[4rem] bg-white  p-6 rounded-xl shadow-xl">
                  <p className="text-4xl font-bold text-[#24278f] block w-[8rem]">7<sup>+</sup></p>
                  <span className="text-sm text-gray-400 font-semibold">años de experiencia</span>
                 </div>  
             </div>     
         </div>
         {/* Tarjetas de valores */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-24">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-10 mt-24">
           {[
             {
               title: "Innovation",
@@ -99,15 +101,15 @@ export default function About() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               viewport={{ once: true }}
-              className="p-8 rounded-2xl bg-white/10 backdrop-blur-md !border-2 !border-gray-300/10 shadow-xl hover:shadow-cyan-400/30 hover:scale-105 transition-transform duration-300"
+              className="p-8 rounded-2xl bg-white/10 backdrop-blur-md !border-2 !border-gray-300/10 shadow-xl hover:shadow-sky-600/10 hover:scale-105 transition-transform duration-300"
             >
               <i
-                className={`${card.icon} text-4xl text-cyan-400 mb-4 drop-shadow-md`}
+                className={`${card.icon} text-4xl bg-gradient-to-br from-[hsl(238,60%,35%)] to-[hsl(195,100%,50%)] !bg-clip-text text-transparent mb-4 drop-shadow-md`}
               ></i>
-              <h3 className="text-2xl font-semibold mb-2 !text-cyan-400">
+              <h3 className="text-2xl font-semibold mb-2 text-sky-600">
                 {card.title}
               </h3>
-              <p className="!text-gray-400">{card.desc}</p>
+              <p className="!text-gray-400 text-[14px]">{card.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -128,7 +130,7 @@ export default function About() {
             Nuestra Historia
           </span>
         </h2>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+        <p className="text-md text-gray-500 max-w-2xl mx-auto">
           Un viaje de evolución constante e innovación
         </p>
       </motion.div>
@@ -155,14 +157,15 @@ export default function About() {
                 {item.year}
               </span>
               <h3 className="text-xl font-bold mb-2 text-sky-600">{item.title}</h3>
-              <p className="text-gray-400">{item.description}</p>
+              <p className="text-gray-500 text-[14px]">{item.description}</p>
             </div>
           </motion.div>
         ))}
       </div>
     </div>
+    <div className="container mx-auto my-12 px-4 ">
       <motion.div
-      className="bg-hero-gradient max-w-7xl mx-auto my-12
+      className="bg-hero-gradient 
                  rounded-2xl p-12 text-center text-white shadow-2xl"
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
@@ -178,13 +181,15 @@ export default function About() {
         miles de clientes satisfechos
       </p>
 
-      <a href="/products"
-        className="px-8 py-3 bg-white text-[hsl(238,60%,35%)] rounded-lg font-semibold z-50 relative
-                   hover:bg-white/90 transition-all shadow-lg hover:shadow-xl hover:scale-105 !cursor-pointer"
+      <Link to="/products"
+        className="buttonRef !font-[600] rounded-xl flex items-center justify-between !px-[1.2em] !py-[0.6em] z-20 hover:!text-white hover:!border-white hover:!border-2 group"
       >
         Ver Productos
-      </a>
+        <i class="fa-solid fa-arrow-right -translate-x-[16rem] group-hover:translate-x-2 "></i>
+
+      </Link>
     </motion.div>
+    </div>
     </section>
   );
 }

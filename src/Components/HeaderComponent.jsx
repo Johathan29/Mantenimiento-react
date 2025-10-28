@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { initFlowbite } from 'flowbite';
 import { motion, AnimatePresence } from 'framer-motion';
-import PathLocation from '../hooks/Location';
+import PathLocation from "../hooks/Location";
 import MiniCart from './MiniCart';
 import UserMenu from './UserMenu'; // tu componente existente
 
@@ -83,7 +83,7 @@ export default function HeaderComponent() {
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             type="button"
-            className="inline-flex items-center p-2 w-[38px] h-[38px] justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
+            className="inline-flex items-center p-2 w-[38px] h-[38px] justify-center text-sm text-gray-500 !bg-transparent rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
           >
             <span className="sr-only">Toggle menu</span>
             <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"} text-lg`} />

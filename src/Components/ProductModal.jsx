@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Truck, Shield, Package } from "lucide-react";
 import notImg  from '../assets/not-img.png';
+import { useProductRating } from "../Controllers/ratingController";
 export default function ProductModal({ product, onClose, onAddToCart }) {
   const [activeTab, setActiveTab] = useState("descripcion");
   const [liked, setLiked] = useState(false);
-
+  const { rating, avgRating, totalVotes, vote } = useProductRating(product.id);
   const tabs = [
     { id: "descripcion", label: "Descripción" },
     { id: "features", label: "Características" },
@@ -24,13 +25,13 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
   // Variantes
   const listVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+    visible: { opacity: 1,color:"oklch(55.1% 0.027 264.364)", transition: { staggerChildren: 0.15 } },
     exit: { opacity: 0, transition: { duration: 0.2 } },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0,color:"oklch(55.1% 0.027 264.364)", transition: { duration: 0.4, ease: "easeOut" } },
   };
 
   const renderTabContent = () => {
@@ -43,7 +44,7 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="list-none text-gray-600 space-y-3 leading-relaxed"
+            className="list-none text-sky-600 space-y-3 leading-relaxed"
           >
             {product.Description ? product.Description?.split(". ")
               .filter((line) => line.trim() !== "")
@@ -51,7 +52,7 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
                 <motion.li
                   key={i}
                   variants={itemVariants}
-                  className="before:mr-2 before:text-sky-500"
+                  className="before:mr-2 text-sky-500 transition-colors"
                 >
                   {line.trim()}.
                 </motion.li>
@@ -79,14 +80,14 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
               <motion.li
                 key={i}
                 variants={itemVariants}
-                className="hover:text-sky-500 transition-colors"
+                className="text-sky-500 transition-colors"
               >
                 {feature}
               </motion.li>
             )): <motion.li
                 key={1}
                 variants={itemVariants}
-                className="hover:text-sky-500 transition-colors"
+                className="text-sky-500 transition-colors"
               >
                 No tiene ninguna caracteristicas este producto
               </motion.li>}
@@ -152,7 +153,7 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
         {/* Botón cerrar */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 rounded-full !bg-transparent !text-white h-8 w-8 flex items-center !text-lg !outline-none !p-0 justify-center !border-0 transition"
+          className="absolute top-3 right-3 z-50 rounded-full !bg-transparent !text-white h-8 w-8 flex items-center !text-lg !outline-none !p-0 justify-center !border-0 transition"
         >
          <i class="fa-solid fa-circle-xmark !text-[#fa0505]" ></i>
         </button>
@@ -163,11 +164,7 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
           {/* Imagen y beneficios */}
           <div className="w-full md:w-1/2 space-y-4">
             <div className={"relative aspect-square rounded-lg overflow-hidden !bg-gray-100 flex items-center bg-cover  justify-center bg-[url("+product.imagen || notImg+")]"}>
-              <img
-                src={product.imagen || notImg}
-                alt={product.Name}
-                className="w-full h-full object-cover rounded-md hidden"
-              />
+              
             </div>
 
             <motion.div
@@ -194,11 +191,21 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
             <h2 className="!text-[1.5rem] font-bold max-w-lg mb-3">
               <span className="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent  ">{product.Name}</span></h2>
             
-            <div className="flex mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} filled={i < product.Rating} />
-              ))}
-            </div>
+              <div className="flex items-center flex-wrap gap-[0.2rem] mt-2">
+        {[...Array(5)].map((_, index) => {
+          const value = index + 1;
+          return (
+          <Star
+            key={value}
+            filled={value <= rating}
+            onClick={() => vote(value)}
+          />
+        );
+        })}
+       <span className="text-md text-gray-300 mt-1">
+            ({avgRating.toFixed(1)}/5 · {totalVotes} votos)
+        </span>
+      </div>
 
             <p className="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] text-[1.4rem] !bg-clip-text text-transparent py-[0.5rem] mb-3">
             {`${new Intl.NumberFormat("en-US", {
@@ -206,12 +213,6 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
                 currency: "USD",
               }).format(product.Price)} USD`}
             </p>
-            <div class="flex items-center justify-between gap-4 mb-4 max-w-lx">
-              <button class="flex-1 !border-0 !text-white !py-2 rounded-lg opacity-[1] hover:opacity-[.9] !bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff]  transition flex gap-2 items-center justify-center"> 
-                <i class="fa-solid fa-credit-card"></i> 
-                Comprar
-              </button>
-            </div>
             <div className="flex items-center justify-between gap-4 mb-4">
               <button
                 onClick={() => onAddToCart(product)}
@@ -219,10 +220,8 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
               >
                 Agregar al carrito
               </button>
-              <button
-                
-                className="flex-1 !bg-sky-500 !text-white !py-2 rounded-lg hover:!bg-sky-600 transition"
-              >
+              <button class="flex-1 !border-0 !text-white !py-2 rounded-lg opacity-[1] hover:opacity-[.9] !bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff]  transition flex gap-2 items-center justify-center"> 
+                <i class="fa-solid fa-credit-card"></i> 
                 Comprar
               </button>
               <motion.button

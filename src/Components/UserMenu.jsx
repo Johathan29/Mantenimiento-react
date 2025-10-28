@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import avatarDefault from "../assets/user-solid-full-home.svg";
 import avatarDefault2 from "../assets/user-solid-full.svg";
-import PathLocation from '../hooks/Location';
+import PathLocation from "../hooks/Location";
 import { initFlowbite } from 'flowbite';
 import { loginUser, logoutUser, registerUser } from "../Services/authService";
 import { useNavigate, Link } from 'react-router-dom';

@@ -136,7 +136,7 @@ useEffect(() => {
       >
         {path!=='/'?
         <div className="lg:col-span-1 rounded-xl bg-black/20 backdrop-blur-sm p-6 rounded-lg shadow-sm md:h-[27rem] mx-6 md:mx-6 lg:mx-0 !h-auto">
-          <div className="border-b-1 !p-[1rem] flex items-center justify-between  rounded-md -m-[0.7px]">
+          <div className="border-b-1 !p-[1rem] flex items-center justify-between   -m-[0.7px]">
             <p className="text-white text-lg font-bold">Filters</p>
             <button onClick={(()=>resetColletion())} className="btnreset !bg-transparent !text-white flex gap-2 items-center shadow-md  !cursor-pointer !transition-all !duration-200 px-4 py-2 !text-sm !font-[600] rounded-xl !bg-white/10 !text-white hover:!bg-white/40">
               <i className="fa-solid fa-eraser"></i>Reset
@@ -188,7 +188,10 @@ useEffect(() => {
           </div>
          :""}
         <div className="lg:col-span-3 md:col-span-2 min-h-full z-0 min-h-full z-0"> 
- {filtered.length===0 ? <p className="text-white text-[2rem]">Cargando productos...</p> :""}
+          {filtered.length===0 ? 
+          <p className="text-white text-[2rem]">
+            Cargando productos...
+          </p> :""}
  
           {path!=='/'?
           <span className="px-6 pb-6 ">Showing {countProducts} products</span>

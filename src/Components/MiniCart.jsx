@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useCart } from "../contexts/CartContext";
 import { ShoppingBag, X, Trash2, Plus, Minus } from "lucide-react";
 import PathLocation from "../hooks/Location";
+import { Link } from "react-router-dom";
 
 export default function MiniCart() {
   const [open, setOpen] = useState(false);
@@ -69,7 +70,7 @@ const subtotal = cart.reduce(
                     <p className="text-sm text-gray-500">$ {`${new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-              }).format(product.Price)} USD`}</p>
+              }).format(item.Price)} USD`}</p>
 
                     <div className="flex items-center gap-2 mt-1">
                       <button
@@ -101,15 +102,16 @@ const subtotal = cart.reduce(
 
         {/* Footer del carrito */}
         {cart.length > 0 && (
-          <div>  <Link to="/carts" className="bg-black !text-white">Ver carrito completo</Link>
-          <div className="absolute bottom-0 left-0 w-full border-t  p-4 bg-[#00718d]">
-            <div className="flex justify-between items-center mb-3">
+          <div>  
+            <Link to="/carts" className="bg-black !text-white">Ver carrito completo</Link>
+            <div className="absolute bottom-0 left-0 w-full border-t  p-4 bg-[#00718d]">
+             <div className="flex justify-between items-center mb-3">
               <span className="font-semibold">Total:</span>
               <span className="font-bold text-lg">$ {`${new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
               }).format(subtotal)} USD`}</span>
-            </div>
+              </div>
             <div className="flex gap-2">
               <button
                 onClick={clearCart}

@@ -19,7 +19,7 @@ export default function Footer() {
               <div className="w-10 h-10 gradient-hero rounded-lg flex items-center justify-center">
                  <img src={logo} className="h-8 animate-spin" alt="Logo" />
               </div>
-              <span className="text-xl font-bold !text-foreground">
+              <span className="text-3xl font-bold !text-foreground">
                 Solutions<span className="!text-sky-500"> Supports</span>
               </span>
             </div>

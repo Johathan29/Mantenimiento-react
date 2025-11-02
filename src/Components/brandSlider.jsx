@@ -4,7 +4,7 @@ import Sony from "../assets/Sony_logo.svg";
 import Dell from "../assets/Dell_Logo.svg";
 import HP from "../assets/HP_logo_2012.svg";
 import Lenovo from "../assets/Lenovo_logo_2015.svg";
-import samsung from "../assets/samsung-Logo.svg";
+import samsung from "../assets/samsung-Logo.jpg";
 
 const brands = [
   { name: "Apple", src: apple },
@@ -72,3 +72,4 @@ const BrandsCarousel = () => {
 };
 
 export default BrandsCarousel;
+

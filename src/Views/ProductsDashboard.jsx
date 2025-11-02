@@ -1,329 +1,323 @@
 import { productController } from '../Controllers/productController';
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../Components/product/ProductCard.jsx';
-import {FormProducts} from '../Components/product/formProducts.jsx';
+import { FormProducts } from '../Components/product/formProducts.jsx';
 import ChartProducts from '../Components/product/chartProducts.jsx';
-import { exportCSV,exportPDF,exportExcel } from '../Components/product/exports';
-import { Timestamp } from 'firebase/firestore';
+import { exportCSV, exportPDF, exportExcel } from '../Components/product/exports';
 import { ContactForm } from '../Controllers/NotificarEmail.jsx';
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus } from 'lucide-react';
+
 function ProductsDashboard() {
   useEffect(() => {
     document.title = 'Dashboard';
   }, []);
+
+  const { fetchproduct, addproduct } = productController;
+  const api = import.meta.env.VITE_API_BASE_URL;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fetchproduct,addproduct } = productController;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [dataProducts, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
-  // filtros
   const [filters, setFilters] = useState({
     search: "",
     category: "all",
     inStock: false,
   });
 
-  // scroll infinito
-  const [visibleCount, setVisibleCount] = useState(5);
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetchproduct();
-        setProducts(data);
+        const res = await axios.get(`${api}/api/products`);
+        const products = res.data;
+        setProducts(products);
+        setFilteredProducts(products);
+        setCategories([...new Set(products.map(p => p.Category))]);
       } catch (err) {
-        console.error('Error fetching products:', err);
         setError(err);
       } finally {
         setLoading(false);
       }
-    };
-  
+    }
     fetchData();
-  }, []);
-  
-   async function handleAdd()  {
-    await productController.addproduct({
-      Name: "Nuevo Producto",
-      Category: "General",
-      Description: "Producto agregado desde dashboard",
-      Price: 50,
-      Amount: 5,
-      created: new Date().toISOString(),
-    });
-   
-  };
- 
-  // manejar scroll
+  }, [api]);
+
   useEffect(() => {
-    function handleScroll() {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-        setVisibleCount(prev => prev + 12);
-      }
-    }
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-    
-  }, []);
- 
+    const searchTerm = filters.search.trim().toLowerCase();
+    const filtered = dataProducts.filter((p) => {
+      const matchSearch =
+        searchTerm === "" ||
+        Object.values(p).some(value =>
+          value && value.toString().toLowerCase().includes(searchTerm)
+        );
+      const matchCategory =
+        filters.category === "all" ||
+        (p.Category && p.Category.toLowerCase() === filters.category.toLowerCase());
+      const matchStock = !filters.inStock || p.Amount > 0;
+      return matchSearch && matchCategory && matchStock;
+    });
+    setFilteredProducts(filtered);
+  }, [filters, dataProducts]);
 
-  
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const productsToShow = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
-  // aplicar filtros
-  const filteredProducts = dataProducts.filter((p) => {
-    const matchSearch =
-      filters.search === "" ||
-      p.Name.toLowerCase().includes(filters.search.toLowerCase()) ||
-      p.Description.toLowerCase().includes(filters.search.toLowerCase());
+  const totalProducts = filteredProducts.length;
+  const totalStock = filteredProducts.reduce((sum, p) => sum + p.Amount, 0);
+  const totalValue = filteredProducts.reduce((sum, p) => sum + p.Price * p.Amount, 0);
 
-    const matchCategory =
-      filters.category === "all" || p.Category === filters.category;
+  const updateModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-    const matchStock = !filters.inStock || p.Amount > 0;
-
-    return matchSearch && matchCategory && matchStock;
-  });
-
-  const productsToShow = filteredProducts.slice(0, visibleCount);
-
-  // métricas
-  const totalProducts = dataProducts.length;
-  const totalStock = dataProducts.reduce((sum, p) => sum + p.Amount, 0);
-  const totalValue = dataProducts.reduce((sum, p) => sum + p.Price * p.Amount, 0);
-
-  const categories = ["all", ...new Set(dataProducts.map(p => p.Category))];
-  const updateModal = () => {
-   //setSelectedProduct(product); // guardar el producto que se quiere editar
-    setIsModalOpen(true); // mostrar modal
+  // 🎬 Variantes de animación reutilizables
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
+    }),
   };
-  const handleSave = (product) => {
-    if (productsToShow.find((p) => p.id === product.id)) {
-      // actualizar producto
-      setProducts((prev) => prev.map((p) => (p.id === product.id ? product : p)));
-    } else {
-      // agregar producto nuevo
-      setProducts((prev) => [...prev, product]);
-    }
-    //setEditingProduct(null); // cerrar modal
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null);
-  };
-  
 
   return (
-    <>
-      <section className=' bg-[#b9d7f15e] '>
-        <div className='bg-[#1f2937e3] p-8 md:mb-[0rem] '>
-          <div className='max-w-7xl block flex-wrap items-center justify-between mx-auto px-[4rem]'>
-            <h2 className='text-[#dde0e5] text-[2.5rem]'>Products</h2>
-          </div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[4rem] space-y-[4rem] ">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-              <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-lg leading-[0.4]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round"
-                  class="lucide lucide-package h-8 w-8 text-white" aria-hidden="true">
-                  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path>
-                  <path d="M12 22V12"></path>
-                  <polyline points="3.29 7 12 12 20.71 7"></polyline>
-                  <path d="m7.5 4.27 9 5.15"></path>
-                </svg>
-              </div>
-              <div class="leading-[0.4]">
-                <h1 class="text-4xl md:text-5xl font-bold text-[#0f5167] !bg-transparent">
-                  Gestión de Productos
-                </h1>
-                <p class="text-md text-[#414652] max-w-xl mx-auto">
-                  Administra tu inventario de manera eficiente
-                </p>
-              </div>
+    <section className="bg-gradient-to-br from-[#000a3c] to-[#04156a] min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <i className="fa-solid fa-box-open text-[#9f9999] text-6xl"></i>
+            <div>
+              <h2
+                className="text-[#9f9999] text-4xl sm:text-5xl font-bold border-b-2 border-white/20"
+                style={{ textShadow: '3px 0px 0px #fffefe' }}
+              >
+                Gestión de Productos
+              </h2>
+              <span className="text-sm ml-2 text-white/70">
+                Administra tu inventario de manera eficiente
+              </span>
             </div>
-            <button
-            onClick={(()=>updateModal())}
-              class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-primary/90 h-9 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-              data-testid="add-product-btn" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-plus h-5 w-5 mr-2" aria-hidden="true">
-                <path d="M5 12h14"></path>
-                <path d="M12 5v14"></path>
-              </svg>
-              Nuevo Producto
-            </button>
-            {isModalOpen && (
-            <div
-            id="modalEl"
-            className="fixed top-0 left-0 w-full h-full bg-[#2726265c] flex justify-center items-center z-50"
+          </div>
+
+          {/* Botón Nuevo Producto */}
+          <motion.button
+            onClick={updateModal}
+            type="button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl border transition-all duration-300"
           >
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-              <FormProducts product={productsToShow} onClose={closeModal} onSave={handleSave}/>
-              
-            </div>
-          </div>
-            )}
-              
-          </div>
-
-          {/* filtros */}
-          <div class="block md:flex items-center rounded-lg gap-4 mt-6 space-y-3 p-[4rem] bg-gradient-to-r from-blue-500 to-indigo-600 ">
-            <div className=' block md:w-1/2 w-full space-y-2'>
-              <label htmlFor="buscar" className='text-white font-[600] block'> Buscar productos</label>
-              <input
-              type="text"
-              placeholder="Buscar..."
-              value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              class="border rounded-md px-3 py-2 border-gray-300 bg-white text-gray-700 w-full h-[39px]"
-            />
-            </div>
-            <div className=' block md:w-1/2 w-full space-y-2'>
-              <label htmlFor="buscar" className='text-white font-[600] block'>Categoria</label>
-            <select
-              value={filters.category}
-              onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-              class="border rounded-md px-3 py-2 border-gray-300 bg-white text-gray-700 w-full h-[39px]"
+            <Plus className="h-5 w-5 shrink-0 text-cyan-400" />
+            <motion.span
+              initial={{ opacity: 0, x: -8 }}
+              whileHover={{ opacity: 1, x: 4 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="hidden group-hover:inline-block group-hover:text-cyan-400"
             >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>
-                  {cat === "all" ? "Todas las categorías" : cat}
-                </option>
-              ))}
-            </select>
-            </div>
-           <div className=' block md:w-[10rem] w-full space-y-2'>
-                <input value="" class="sr-only peer border rounded-md px-3 py-2 border-gray-300 bg-white text-gray-700 w-full" type="checkbox"
-                            checked={filters.inStock}
-                            onChange={(e) => setFilters(prev => ({ ...prev, inStock: e.target.checked }))}/>
-                            <label htmlFor="buscar" className='text-whitefont-[500] block'>Solo en stock</label>
-              <div class="relative w-11 h-6 mb-[10px] bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-            </div>
-            
-          </div>
+              Nuevo Producto
+            </motion.span>
+          </motion.button>
         </div>
 
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 block flex-wrap items-center justify-between min-h-[23rem]'>
-          <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6 py-6">
-            <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
-              <div class="p-6">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm font-medium text-blue-600">Total Productos</p>
-                    <p class="text-2xl font-bold text-blue-900" data-testid="total-products">{totalProducts}</p>
-                  </div>
-                  <div class="bg-blue-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round"
-                      class="lucide lucide-package h-6 w-6 text-blue-600" aria-hidden="true">
-                      <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path>
-                      <path d="M12 22V12"></path>
-                      <polyline points="3.29 7 12 12 20.71 7"></polyline>
-                      <path d="m7.5 4.27 9 5.15"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-[#2726265c] flex justify-center items-center z-50">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-6 rounded-lg shadow-lg w-[90%] sm:max-w-lg"
+            >
+              <FormProducts product={productsToShow} onClose={closeModal} />
+            </motion.div>
+          </div>
+        )}
+
+        {/* Filtros */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mt-10 bg-gradient-to-br from-[#061024] to-[#0b244d] shadow-[2px_7px_9px_4px,0_8px_1px_3px] shadow-black/20 rounded-lg p-6"
+        >
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            {/* Buscar */}
+            <div className="w-full md:w-1/2">
+              <label className="text-white font-semibold block mb-1">Buscar productos</label>
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={filters.search}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                className="border rounded-md px-3 py-2 border-gray-300 bg-white text-gray-700 w-full"
+              />
             </div>
-            <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-lg">
-              <div class="lg:p-6 p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm font-medium text-green-600">Total Stock</p>
-                    <p class="text-2xl font-bold text-green-900" data-testid="total-stock">{totalStock.toLocaleString('en-US', {
-                    })} unidades</p>
-                  </div>
-                  <div class="bg-green-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round"
-                      class="lucide lucide-chart-column h-6 w-6 text-green-600" aria-hidden="true">
-                      <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
-                      <path d="M18 17V9"></path>
-                      <path d="M13 17V5"></path>
-                      <path d="M8 17v-3"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>  
+
+            {/* Categoría */}
+            <div className="w-full md:w-1/3">
+              <label className="text-white font-semibold block mb-1">Categoría</label>
+              <select
+                onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+                className="w-full border rounded-md px-3 py-2 text-gray-700 bg-white"
+              >
+                <option value="all">Todas las categorías</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
-            <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 shadow-lg">
-              <div class="p-6">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm font-medium text-purple-600">Valor Total Inventario</p>
-                    <h2 class="text-2xl font-bold text-purple-900" data-testid="total-value">
-                      {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalValue)} USD
-                    </h2>
+
+            {/* Solo en stock */}
+            <div className="flex flex-col justify-end">
+              <label className="text-white font-semibold mb-1">Solo en stock</label>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.inStock}
+                  onChange={(e) => setFilters(prev => ({ ...prev, inStock: e.target.checked }))}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+              </label>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Métricas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4  gap-6 py-10">
+          {[ 
+            { label: "Total Productos", value: totalProducts.toLocaleString('en-US', { }), icon: "fa-box" },
+            { label: "Total Stock", value: totalStock.toLocaleString('en-US', { }), icon: "fa-chart-column" },
+            { label: "Valor Total Inventario", value: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalValue), special: true, icon: "fa-chart-column" },
+            { label: "Exports Data", value: "export", special: "export" }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              className={`rounded-xl ${
+                item.special === true
+                  ? "bg-gradient-to-br from-[#02050c] to-[#0b244d] shadow-[2px_7px_9px_4px,0_8px_1px_3px] shadow-black/20 "
+                  : item.special === "export"
+                  ? "bg-gradient-to-br from-[#02050c] to-[#0b244d] shadow-[2px_7px_9px_4px,0_8px_1px_3px] shadow-black/20 text-white"
+                  : "bg-gradient-to-br from-[#02050c] to-[#0b244d] shadow-[2px_7px_9px_4px,0_8px_1px_3px] shadow-black/20  text-white"
+              } p-6 `}
+            >
+              {item.special === "export" ? (
+                <>
+                  <h5 className="text-white text-md font-bold mb-2 flex items-center justify-between">Exports Data <i class="fa-solid fa-download text-cyan-400 text-xl" ></i></h5>
+                  <div className="flex gap-3">
+                    <button onClick={() => exportCSV(dataProducts)} className="text-green-500 text-2xl hover:text-green-700"><i className="fa-solid fa-file-csv"></i></button>
+                    <button onClick={() => exportExcel(dataProducts)} className="text-green-600 text-2xl hover:text-green-800"><i className="fa-solid fa-file-excel"></i></button>
+                    <button onClick={() => exportPDF(dataProducts)} className="text-red-500 text-2xl hover:text-red-700"><i className="fa-solid fa-file-pdf"></i></button>
                   </div>
-                  <div class="bg-purple-100 p-3 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                </>
+              ) : item.special === true ? (
+                <>
+                  <div className="flex justify-between mb-4 items-center">
+                    <p className="text-sm font-bold">{item.label}</p>
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                       stroke-linecap="round" stroke-linejoin="round"
-                      class="lucide lucide-trending-up h-6 w-6 text-purple-600" aria-hidden="true">
+                      class="lucide lucide-trending-up h-6 w-6 text-cyan-400" aria-hidden="true">
                       <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
                       <polyline points="16 7 22 7 22 13"></polyline>
                     </svg>
                   </div>
-                </div> 
-              </div>
-              </div>
-              <div class="rounded-xl border text-card-foreground bg-gradient-to-br from-white to-slate-100 border-slate-300 shadow-lg">
-              <div class="p-6">
-                <h5 className='text-blue-700 text-md font-bold'>Exports Data </h5>
-                <div class="flex space-x-2 items-center ">
-                  
-                    <div>
-                      <button onClick={()=>exportCSV(dataProducts)} className='focus:!outline-none !text-green-300 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-500 !border-0'> 
-                        <i class="fa-solid fa-arrow-down"></i>
-                        <hr/>
-                        <i class="fa-solid fa-file-csv"></i>
-                      </button>
-                    </div>
-                    <div>
-                      <button title='Exports to Excel' onClick={()=>exportExcel(dataProducts)} className='focus:!outline-none  !text-green-500 !bg-transparent !rounded-0 border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-green-700 !border-0'>
-                        <i class="fa-solid fa-file-excel"></i>
-                      </button>
-                    </div>
-                    <div>
-                      <button onClick={()=>exportPDF(dataProducts)} className='!text-red-400 !bg-transparent !rounded-0 focus:!outline-none border-0 !text-[1.7rem] !p-0 hover:!border-0 hover:!text-red-700 !border-0'>
-                      <i class="fa-solid fa-file-pdf"></i>
-                      </button>
-                    </div>
-                    <div>
-           
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* listado */}
-          <div className=" space-y-4">
-            {loading && <div className='rounded-xl text-card-foreground bg-white shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-[6rem] my-[2rem]'>
-                            <div class="loading-text">Loading<span class="dots"></span>
-                            </div>
-                            </div>}
-            {error && <p className="text-red-500">Error cargando productos</p>}
-            {!loading && productsToShow.length === 0 && 
-            <p className="p-[2rem] bg-white text-red-500 text-[2rem] flex rounded-[12px] items-end gap-2 " >
-            No se encontraron productos</p>}
-            <ProductCard products={productsToShow} />
-            {productsToShow.length < filteredProducts.length && (
-              <p className="text-center text-whitepy-4">
-                Desplázate para ver más productos...
-              </p>
-            )}
-          </div>
-          <ChartProducts/>
-          <ContactForm></ContactForm>
+                  <p className="text-2xl font-bold text-center">{item.value} <span className="!text-sm !text-gray-400/70">{item.label==='Valor Total Inventario' ? 'US':""}</span></p>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between mb-4 items-center">
+                    <p className="text-sm font-bold">{item.label}</p>
+                    <i className={`fa-solid ${item.icon} text-cyan-400 text-xl`}></i>
+                  </div>
+                  <p className="text-2xl font-bold text-center">{item.value} <span className="!text-sm !text-gray-400/70">{item.label==='Total Stock' ? 'unidades':""}</span></p>
+                </>
+              )}
+            </motion.div>
+          ))}
         </div>
-      </section>
-    </>
+
+        {/* Listado */}
+        <div className="mb-8">
+          {loading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="bg-white p-10 text-center rounded-xl shadow"
+            >
+              Cargando...
+            </motion.div>
+          )}
+          {error && <p className="text-red-500">Error cargando productos</p>}
+          {!loading && productsToShow.length === 0 && (
+            <p className="bg-white text-red-500 text-2xl p-6 rounded-xl text-center">No se encontraron productos</p>
+          )}
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="space-y-4"
+            >
+              <ProductCard products={productsToShow } />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Paginación */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-6 gap-2 flex-wrap">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              className={`px-4 py-2 rounded-l-lg ${
+                currentPage === 1 ? "bg-gray-400/20 text-gray-500 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Anterior
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1 ? "bg-sky-400/10 text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              className={`px-4 py-2 rounded-r-lg ${
+                currentPage === totalPages ? "bg-gray-400/20 text-gray-500 cursor-not-allowed" : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
+
+        <ChartProducts />
+        <ContactForm />
+      </div>
+    </section>
   );
 }
 

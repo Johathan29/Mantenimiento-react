@@ -11,13 +11,13 @@ function Homedashboard() {
   return (<>
     
     
-    <section className=' bg-[#b9d7f15e] '>
-      <div className='bg-[#1f2937e3] p-8 md:mb-[3rem]'>
-       <div className='max-w-screen-xl block flex-wrap items-center justify-between mx-auto px-[4rem]'>
-         <h2 className='text-[#dde0e5] text-[2.5rem]'>Dashboard</h2>
+    <section className='bg-gradient-to-br from-[#000a3c] to-[#04156a] '>
+      <div className='py-4 md:mb-[3rem] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+       <div className='max-w-screen-xl block flex-wrap items-center justify-between mx-auto  '>
+         <h2 className='text-[#9f9999] text-5xl border-b-2 border-b-white/20' style={{textShadow:'3px 0px 0px #fffefe'}}>Dashboard</h2>
        </div>
       </div>
-      <div className='max-w-screen-xl block flex-wrap items-center justify-between mx-auto md:px-[4rem]'>
+      <div className=''>
       
        <ChartDashboard/>
       </div>

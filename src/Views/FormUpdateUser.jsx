@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged, updateProfile, updateEmail, signOut } from
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-
+import img from '../assets/img.jpg'
 export default function FormUpdateUsers() {
   const auth = getAuth();
   const navigate = useNavigate();
@@ -98,9 +98,9 @@ export default function FormUpdateUsers() {
       const updatedData = {
         uid: user.uid,
         email,
-        displayName,
-        phoneNumber,
-        photoURL,
+        displayName:displayName,
+        phoneNumber:phoneNumber,
+        photoURL:img,
         updatedAt: new Date(),
       };
 

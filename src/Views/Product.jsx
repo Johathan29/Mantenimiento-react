@@ -11,7 +11,7 @@ import { LuSearchX } from "react-icons/lu";
 import { initFlowbite } from "flowbite";
 import { useSearchParams } from "react-router-dom";
 
-export default function Products({ currentUser }) {
+export default function Products({ refProp }) {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [countProducts, setcountProducts] = useState('');
@@ -108,7 +108,7 @@ useEffect(() => {
   
   return (
     <>
-   <section  className="bg-hero-gradient"> 
+   <section  className="bg-hero-gradient" id={'products'}> 
     <div className="container mx-auto py-[4rem] z-30 ">
       <div className="block w-full text-center ">
           <div className="!leading-[1.2] flex text-sky-500 items-baseline justify-center gap-4"> 
@@ -136,7 +136,7 @@ useEffect(() => {
       >
         {path!=='/'?
         <div className="lg:col-span-1 rounded-xl bg-black/20 backdrop-blur-sm p-6 rounded-lg shadow-sm md:h-[27rem] mx-6 md:mx-6 lg:mx-0 !h-auto">
-          <div className="border-b-1 !p-[1rem] flex items-center justify-between   -m-[0.7px]">
+          <div className="border-b-1 !p-[1rem] flex items-center justify-between  rounded-md -m-[0.7px]">
             <p className="text-white text-lg font-bold">Filters</p>
             <button onClick={(()=>resetColletion())} className="btnreset !bg-transparent !text-white flex gap-2 items-center shadow-md  !cursor-pointer !transition-all !duration-200 px-4 py-2 !text-sm !font-[600] rounded-xl !bg-white/10 !text-white hover:!bg-white/40">
               <i className="fa-solid fa-eraser"></i>Reset
@@ -188,10 +188,7 @@ useEffect(() => {
           </div>
          :""}
         <div className="lg:col-span-3 md:col-span-2 min-h-full z-0 min-h-full z-0"> 
-          {filtered.length===0 ? 
-          <p className="text-white text-[2rem]">
-            Cargando productos...
-          </p> :""}
+ {filtered.length===0 ? <p className="text-white text-[2rem]">Cargando productos...</p> :""}
  
           {path!=='/'?
           <span className="px-6 pb-6 ">Showing {countProducts} products</span>
@@ -266,13 +263,13 @@ useEffect(() => {
       )}
       {path==='/' ? 
       <div className="flex justify-center">
-        <a href="/products"  className=" inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 group relative !bg-white hover:!bg-white/90 hover:!text-sky-700 !text-sky-400 font-bold text-lg px-8 py-6 rounded-full !shadow-lg hover:!shadow-xl transition-all duration-800 animate-pulse hover:animate-none active:scale-95">
+        <Link to="/products"  className="buttonRef !font-[600] rounded-[10px] flex items-center justify-between !px-[1.2em] !py-[0.6em] z-20 hover:!text-white group">
              Ver Todos los Productos
            
-              <span  className="absolute inset-0 rounded-full w-[12rem]  bg-[#fff] animate-ping">
+              <span  className="absolute inset-0 rounded-full bg-[#fff] animate-ping">
               </span>
            
-          </a>
+          </Link>
         </div>
         :""}
       {/* <motion.button
@@ -296,4 +293,3 @@ useEffect(() => {
     </>
   );
 }
-

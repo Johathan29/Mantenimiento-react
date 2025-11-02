@@ -269,7 +269,7 @@ useEffect(() => {
         <a href="/products"  className=" inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 group relative !bg-white hover:!bg-white/90 hover:!text-sky-700 !text-sky-400 font-bold text-lg px-8 py-6 rounded-full !shadow-lg hover:!shadow-xl transition-all duration-800 animate-pulse hover:animate-none active:scale-95">
              Ver Todos los Productos
            
-              <span  className="absolute inset-0 rounded-full bg-[#fff] animate-ping">
+              <span  className="absolute inset-0 rounded-full w-[12rem]  bg-[#fff] animate-ping">
               </span>
            
           </a>
@@ -296,3 +296,4 @@ useEffect(() => {
     </>
   );
 }
+

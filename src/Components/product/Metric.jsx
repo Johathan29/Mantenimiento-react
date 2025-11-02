@@ -1,15 +1,17 @@
 function Metric({ label, value, color }) {
   const colors = {
-    green: {classContent:"bg-green-50  border-green-200 ",classTitle:"text-md font-medium  text-green-600 ",classCantidad:"text-xl font-bold  text-green-900 "},
-    blue: {classContent:"bg-blue-50  border-blue-200 ",classTitle:"text-md font-medium  text-blue-600 ",classCantidad:value <= 0 ? "text-xl  font-bold  text-red-900" : " text-xl  font-bold  text-blue-900 "},
-    purple:{classContent:"bg-purple-50  border-purple-200 ",classTitle:"text-md font-medium  text-purple-600 ",classCantidad:"text-xl  font-bold  text-purple-900 "},
-    slate:{classContent:"bg-slate-50  border-slate-200 ",classTitle:"text-md font-medium  text-slate-600 ",classCantidad:"text-[17px]  font-bold  text-slate-900 "},
+    green: {classContent:"p-3 rounded-lg min-w-max w-full bg-linear-to-r from-black to-black/10 ",classTitle:"text-md font-medium  text-white ",classCantidad:"text-xl font-bold  text-white "},
+    blue: {classContent:"p-3 rounded-lg  min-w-max w-full bg-linear-to-r from-black to-black/10 ",classTitle:"text-md font-medium  text-white ",classCantidad:value <= 0 ? "text-xl  font-bold  text-red-900" : " text-xl  font-bold  text-white"},
+    purple:{classContent:"p-3 rounded-lg  min-w-max w-full bg-linear-to-r from-black to-black/10 ",classTitle:"text-md font-medium  text-white ",classCantidad:"text-xl  font-bold  text-white"},
+    slate:{classContent:"p-3 rounded-lg  min-w-max w-full bg-linear-to-r from-black to-black/10",classTitle:"text-md font-medium  text-white",classCantidad:"text-[17px]  font-bold  text-white "},
   };
 
   return (
     <div className={`p-3 rounded-lg border ${colors[color].classContent}`}>
       <span className={colors[color].classTitle}>{label}</span>
-      <p className={colors[color].classCantidad}>{value}{label==='Stock' ? ' unidades' : ''}</p>
+      <p className={colors[color].classCantidad}>{value} <span className="!text-sm !text-gray-400/70">
+        {label==='Stock' ? ' unidades' : label==='Valor Total' ||  label==='Precio' ? 'US' : ''}</span>
+      </p>
     </div>
   );
 }

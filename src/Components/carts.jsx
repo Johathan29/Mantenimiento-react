@@ -1,168 +1,270 @@
+import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import { motion } from "framer-motion";
+import notImg from "../assets/not-img.png";
+import { Timestamp, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
+import { salesController } from "../Controllers/salesController";
+import { db } from "../Firebase/congif.js";
 
 export default function CartView() {
-  const { cart, removeFromCart, clearCart, loading, addToCart,removeToCart,decreaseQuantity } = useCart();
+  const { cart, removeFromCart, reducirToCart, clearCart, loading, addToCart } = useCart();
+  const [selectedItems, setSelectedItems] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user")) || { displayName: "Invitado" };
 
-  if (loading) return  (<div className="py-24 h-0 md:min-h-[44rem]"> <div className="rounded-xl w-1/2 bg-white flex justify-center shadow-xl container mx-auto ">
- <p className="text-black p-[4rem] text-2xl ">Cargando carrito<span class="dots"></span></p></div></div>);
+  const formatCurrency = (num) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(num);
 
-  // Calcular totales dinámicos
-  const subtotal = cart.reduce(
-    (acc, item) => acc + item.Price * (item.quantity || 1),
-    0
-  );
-
-  return (
-    <div className="max-w-screen-xl  mx-auto py-10 px-4 ">
-      {/* Encabezado */}
-      <div className="mb-8 md:flex items-center justify-between space-y-4">
-        <div>
-          <h1 className="text-4xl font-bold !bg-transparent mb-2">
-            Carrito de Compras
-          </h1>
-          <p className="text-muted-foreground">
-            {cart.length} producto{cart.length !== 1 && "s"} en tu carrito
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="rounded-xl w-full max-w-md bg-white flex justify-center shadow-xl p-8">
+          <p className="text-black text-2xl font-medium">
+            Cargando carrito<span className="dots"></span>
           </p>
         </div>
-        <a href="/productos">
-          <button className="inline-flex items-center justify-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md text-sm font-medium">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-arrow-left w-4 h-4"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
-            Seguir Comprando
-          </button>
-        </a>
       </div>
- 
-      {cart.length === 0 ? (
-         <div className="py-24 h-0 md:min-h-[30rem]"> <div className="rounded-xl w-1/2 bg-white flex justify-center shadow-xl container mx-auto ">
- <p className="text-black p-[4rem] text-2xl ">No hay productos en tu carrito.</p></div></div>)
-       : (
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Lista de productos */}
-          <div className="lg:col-span-2 space-y-4">
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-lg  bg-card text-card-foreground shadow-[0 7px 38px -12px] shadow-[] border-border/50 cardShadow"
-              >
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className=" w-[7rem]">
-                      <img src={item.imagen || ''} alt={item.Name} className="w-full"/>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-2xl mb-1">{item.Name}</h3>
-                      <p className="text-sm text-[#474646] mb-4">
-                        {item.Description}
-                      </p>
-                      <p className="text-2xl font-bold text-primary">
-                        ${item.Price.toFixed(2)}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => removeToCart(item.id)}
-                      className="!text-[#ff000099] !outline-none hover:text-destructive/90 !border-0 hover:bg-destructive/10 !p-0 flex hover:!text-red-700 hover:!border-none items-center justify-center !bg-transparent"
-                    >
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
+    );
 
-                  {/* Controles de cantidad */}
-                  <div className="flex items-center gap-3 mt-4">
-                    <button
-                      onClick={() =>
-                        removeFromCart(item.id, true /* reducir cantidad */)
-                      }
-                      className=" bg-transparent hover:bg-white hover:!border-[#00718d] h-10 w-10 rounded-md flex items-center justify-center"
-                    >
-                      <i class="fa-solid fa-minus"></i>
-                    </button>
-                    <span className="font-semibold text-lg min-w-[3ch] text-center">
-                      {item.quantity || 1}
-                    </span>
-                    <button
-                      onClick={() => addToCart(item)}
-                      className="bg-transparent hover:bg-white hover:!border-[#00718d] h-10 w-10 rounded-md flex items-center justify-center"
-                    >
-                      <i class="fa-solid fa-plus"></i>
-                    </button>
-                    <span className="ml-auto text-lg font-semibold">
-                      Subtotal: $<span className="text-[#00718d]">{(item.Price * (item.quantity || 1)).toFixed(2)}</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+  // ⚙️ Procesar venta y actualizar inventario
+const handleCreateSale = async () => {
+  const productosSeleccionados = cart.filter((item) =>
+    selectedItems.includes(item.id)
+  );
+
+  if (!productosSeleccionados.length) {
+    alert("Selecciona al menos un producto para registrar la venta");
+    return;
+  }
+
+  // 🧮 Calcular totales
+  const subtotal = productosSeleccionados.reduce(
+    (acc, p) => acc + p.Price * p.quantity,
+    0
+  );
+  const impuesto = subtotal * 0.18;
+  const total = subtotal + impuesto;
+
+  const saleData = {
+    cliente: user?.displayName,
+    idClient: user?.uid,
+    productos: productosSeleccionados.map((item) => ({
+      id: item.id,
+      nombre: item.Name,
+      cantidad: item.quantity,
+      precio: item.Price,
+      impuesto: (item.Price * item.quantity * 0.18).toFixed(2),
+    })),
+    metodo_pago: "Efectivo",
+    subtotal: subtotal.toFixed(2),
+    impuesto: impuesto.toFixed(2),
+    total: total.toFixed(2),
+  };
+
+  try {
+    const newSale = await salesController.addSales(saleData);
+
+    // 🧹 Limpiar carrito solo de los vendidos
+    const remainingItems = cart.filter(
+      (item) => !selectedItems.includes(item.id)
+    );
+    clearCart();
+    remainingItems.forEach((item) => addToCart(item));
+    setSelectedItems([]);
+
+    alert(`✅ Venta registrada correctamente. ID: ${newSale.id}`);
+  } catch (error) {
+    alert(error.message || "Error al registrar la venta");
+  }
+};
+
+  // 🧮 Totales generales
+  const subtotal = cart.reduce((acc, item) => acc + item.Price * (item.quantity || 1), 0);
+  const tax = subtotal * 0.18;
+  const total = subtotal + tax;
+  const quantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  return (
+    <div className="bg-hero-gradient min-h-screen">
+      <div className="max-w-screen-xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+        {/* Encabezado */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="!bg-transparent text-3xl md:text-4xl font-bold text-white mb-2">
+              Carrito de Compras
+            </h1>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-gray-200 text-sm">
+              <p>{cart.length} item{cart.length !== 1 && "s"} en tu carrito</p>
+              <span className="hidden sm:block">•</span>
+              <p>{quantity} producto{quantity !== 1 && "s"} en total</p>
+            </div>
           </div>
 
-          {/* Resumen de compra */}
-          <div className="lg:col-span-1">
-            <div className="rounded-lg border bg-card text-card-foreground sticky top-6 border-primary/20 shadow-lg">
-              <div className="p-6 border-b">
-                <h3 className="text-2xl font-semibold">Resumen de Compra</h3>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="flex justify-between text-muted-foreground">
-                  <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-muted-foreground">
-                  <span>Envío</span>
-                  <span>Gratis</span>
-                </div>
-                <div className="border-t pt-4">
-                  <div className="flex justify-between text-xl font-bold">
-                    <span>Total</span>
-                    <span className="text-primary">${subtotal.toFixed(2)}</span>
+          <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+            <Link
+              to="/products"
+              className="font-semibold rounded-xl flex items-center gap-2 px-5 py-2 !bg-white !text-[#00a6f4] border border-[#00a6f4] hover:!bg-[#00a6f4] hover:!text-white transition-all duration-300 group"
+            >
+              <i className="fa-solid fa-arrow-left group-hover:-translate-x-4"></i>
+              <span>Seguir comprando</span>
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* 🛒 Contenido */}
+        {cart.length === 0 ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="rounded-xl w-full max-w-md bg-white flex justify-center shadow-xl p-8">
+              <p className="text-black text-2xl font-medium text-center">No hay productos en tu carrito.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Lista de productos */}
+            <div className="lg:col-span-2 space-y-4">
+              {cart.map((item) => (
+                <div key={item.id} className="rounded-lg bg-card text-card-foreground shadow-xl border border-white/10">
+                  <div className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      {/* Imagen */}
+                      <div className="flex-shrink-0 mx-auto sm:mx-0 w-full sm:w-32 md:w-40">
+                        <img
+                          src={item.imagen || notImg}
+                          alt={item.Name}
+                          className="w-full h-auto object-cover rounded-lg"
+                        />
+                      </div>
+
+                      {/* Información */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-lg md:text-xl mb-1 text-white truncate">{item.Name}</h3>
+                        <p className="text-white/80 text-sm leading-relaxed line-clamp-2 md:line-clamp-3">{item.Description}</p>
+
+                        {/* Controles */}
+                        <div className="flex flex-wrap items-center gap-3 mt-4">
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            onClick={() => {
+                              if (item.quantity <= 1) {
+                                if (window.confirm("¿Deseas eliminar este producto del carrito?")) reducirToCart(item);
+                              } else {
+                                reducirToCart(item);
+                              }
+                            }}
+                            className="bg-white text-[#00a6f4] border border-[#00a6f4] hover:bg-[#00a6f4] hover:text-white h-5 w-5 rounded-full flex items-center justify-center"
+                          >
+                            <i className="fa-solid fa-minus"></i>
+                          </motion.button>
+
+                          <span className="font-semibold text-lg text-white min-w-[3ch] text-center">
+                            {item.quantity || 1}
+                          </span>
+
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            onClick={() => addToCart(item)}
+                            className="bg-white text-[#00a6f4] border border-[#00a6f4] hover:bg-[#00a6f4] hover:text-white h-5 w-5 rounded-full flex items-center justify-center"
+                          >
+                            <i className="fa-solid fa-plus"></i>
+                          </motion.button>
+
+                          <motion.button
+                            whileTap={{ scale: 0.85 }}
+                            onClick={() => {
+                              if (window.confirm("¿Deseas eliminar este producto del carrito?")) removeFromCart(item.id);
+                            }}
+                            className="text-red-500 hover:text-red-700 ml-2 flex items-center justify-center bg-transparent"
+                          >
+                            <i className="fa-solid fa-trash"></i>
+                          </motion.button>
+
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.includes(item.id)}
+                            onChange={(e) =>
+                              e.target.checked
+                                ? setSelectedItems([...selectedItems, item.id])
+                                : setSelectedItems(selectedItems.filter((id) => id !== item.id))
+                            }
+                            className="accent-[#00a6f4] w-5 h-5"
+                          />
+
+                          <p className="ml-auto text-sm sm:text-base text-white w-auto grid space-y-0 font-semibold">
+                            <span className="text-[#00a6f4] text-lg !mt-0">
+                              {formatCurrency(item.Price * (item.quantity || 1))}
+                            </span>
+                            <span className="text-xs font-bold text-gray-300 -mt-1">
+                              {formatCurrency(item.Price)} <span className="text-xs mr-1">US</span>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              <div className="p-6 pt-0 flex flex-col gap-3">
-                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 rounded-md px-8 bg-white text-primary hover:bg-white/90 font-semibold shadow-lg group">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-shopping-bag w-4 h-4"
+            {/* 🧾 Resumen */}
+            <div className="lg:col-span-1">
+              <div className="rounded-lg bg-purple-700/60 backdrop-blur-md border border-white/20 shadow-xl sticky top-6">
+                <div className="p-6 border-b border-white/10">
+                  <h3 className="text-2xl font-semibold text-white">Resumen de Compra</h3>
+                </div>
+
+                <div className="p-6 space-y-4 text-gray-200">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span className="text-black">{formatCurrency(subtotal)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span className="text-black">{formatCurrency(tax)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Envío</span>
+                    <span className="text-[#00a6f4]">Gratis</span>
+                  </div>
+                  <div className="border-t border-white/10 pt-4">
+                    <div className="flex justify-between text-xl font-bold text-white">
+                      <span>Total</span>
+                      <span className="text-[#00a6f4]">{formatCurrency(total)} US</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 pt-0 flex flex-col gap-3">
+                  <button
+                    onClick={handleCreateSale}
+                    disabled={!selectedItems.length}
+                    className={`w-full text-white border border-[#00a6f4] shadow-lg rounded-lg text-lg py-2.5 flex items-center justify-center gap-3 transition-all duration-300 ${
+                      !selectedItems.length
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-[#00a6f4] hover:bg-white hover:text-[#00a6f4]"
+                    }`}
                   >
-                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
-                    <path d="M3 6h18" />
-                    <path d="M16 10a4 4 0 0 1-8 0" />
-                  </svg>
-                  Proceder al Pago
-                </button>
+                    <i className="fa-solid fa-bag-shopping"></i>
+                    Proceder al Pago
+                  </button>
 
-                <button
-                  onClick={clearCart}
-                  className="border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full rounded-md text-sm font-medium"
-                >
-                  Vaciar Carrito
-                </button>
+                  <button
+                    onClick={clearCart}
+                    className="w-full text-[#00a6f4] bg-white border border-[#00a6f4] hover:bg-[#00a6f4] hover:text-white shadow-lg rounded-lg text-lg py-2.5 flex items-center justify-center gap-3 transition-all duration-300"
+                  >
+                    <i className="fa-solid fa-trash"></i>
+                    Vaciar Carrito
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

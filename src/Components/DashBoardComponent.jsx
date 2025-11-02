@@ -1,9 +1,11 @@
+import { initFlowbite } from "flowbite";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 export default function DashboardComponent() {
    const [user, getUser] = useState([])
    useEffect(() => {
+      initFlowbite()
       getUser(JSON.parse(localStorage.getItem('user')))
    }, []);
  
@@ -21,7 +23,7 @@ export default function DashboardComponent() {
             </svg>
          </button>
          <aside id="sidebar-multi-level-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-            <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+            <div class="h-full px-3 py-4 overflow-y-auto bg-gradient-to-br from-[#02050c] to-[#0b244d] shadow-[2px_7px_9px_4px,0_8px_1px_3px] shadow-black/20">
 
 
                <div class="w-full max-w-sm bg-white border-b-[1px] border-gray-200  mb-[2rem] shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -55,14 +57,14 @@ export default function DashboardComponent() {
                      </div>
                   </div>
                   <div class="flex flex-col items-center py-[1rem]">
-                     <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src={user.imagen} alt={user.nombre} />
+                     <img class="w-24 h-24 mb-3 rounded-full shadow-lg object-cover" src={user.photoURL} alt={user.nombre} />
                      <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white capitalize">{user.nombre}</h5>
                      <span class="text-sm text-gray-500 dark:text-gray-400 capitalize">{user.profesión}</span>
 
                   </div>
                </div>
 
-               <ul class="space-y-2 font-medium">
+               <ul class="space-y-2 font-medium navDash">
                   <li>
                      <NavLink to="/dashboard" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">

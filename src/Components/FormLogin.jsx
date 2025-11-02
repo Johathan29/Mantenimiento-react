@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ModalMsg from "../Components/utili/Modal";
 import ImgProfile from './utili/img-profil'
+import { useCart } from '../contexts/CartContext';
 // ──────────────────────────────────────────────────────────────
 // UserMenu
 // ──────────────────────────────────────────────────────────────
@@ -22,6 +23,10 @@ export default function FormLogin({ users, currentUser, setCurrentUser }) {
   const [msg, setMsg] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
 const [modal, setModal] = useState({ show: false, title: "", message: "", type: "info" });
+  const { 
+    user, cart, loading, loadCart, addToCart, removeFromCart, clearCart, reducirToCart 
+  } = useCart();
+
   const fetchRole = async (user) => {
     try {
       const idTokenResult = await user.getIdTokenResult(true);
@@ -51,6 +56,7 @@ const [modal, setModal] = useState({ show: false, title: "", message: "", type: 
       message: `Welcome back ${user.displayName || user.email}!`,
       type: "success",
     });
+    loadCart(user.uid);
   } catch (error) {
     if (error.message === "EMAIL_NOT_VERIFIED") {
       setModal({

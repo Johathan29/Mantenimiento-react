@@ -5,7 +5,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { initFlowbite } from 'flowbite';
 import { motion, AnimatePresence } from 'framer-motion';
-import PathLocation from "../hooks/Location";
+import PathLocation from '../hooks/Location';
 import MiniCart from './MiniCart';
 import UserMenu from './UserMenu'; // tu componente existente
 
@@ -75,7 +75,7 @@ export default function HeaderComponent() {
                    "!text-[2.2rem] !text-white font-semibold"
               }
             >
-              Solutions Supports
+              Solutions <span class="!text-sky-500"> Supports</span>
             </span>
           </Link>
 
@@ -83,10 +83,10 @@ export default function HeaderComponent() {
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             type="button"
-            className="inline-flex items-center p-2 w-[38px] h-[38px] justify-center text-sm text-gray-500 !bg-transparent rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
+            className="inline-flex items-center p-2 w-[38px] h-[38px] justify-center text-sm text-gray-500 !outline-none !border-0 !bg-transparent rounded-lg md:hidden hover:bg-gray-100 focus:!outline-none"
           >
             <span className="sr-only">Toggle menu</span>
-            <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"} text-lg`} />
+            <i className={`fa-solid ${menuOpen ? "fa-xmark text-red-500" : "fa-bars"} text-lg`} />
           </button>
 
           {/* Menú escritorio */}
@@ -107,13 +107,15 @@ export default function HeaderComponent() {
             </ul>
 
             {/* Avatar + carrito en escritorio */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4" id="avatar">
               <UserMenu
                 users={users}
                 currentUser={currentUser}
                 setCurrentUser={setCurrentUser}
-              />
+              /> 
+              {currentUser==="" ? "" :
               <MiniCart />
+}
             </div>
           </div>
         </div>
@@ -128,7 +130,7 @@ export default function HeaderComponent() {
               exit="exit"
               variants={menuVariants}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="md:hidden bg-white/90 backdrop-blur-xl shadow-lg border-t border-gray-200 overflow-hidden"
+              className="md:hidden bg-transparent backdrop-blur-xl shadow-lg border-t border-gray-200/10 overflow-hidden"
             >
               <ul className="flex flex-col items-center gap-2 py-4">
                 {navegation.map((item) => (
@@ -144,13 +146,15 @@ export default function HeaderComponent() {
                 ))}
 
                 {/* Avatar + carrito dentro del menú móvil */}
-                <li className="w-full border-t border-gray-300 pt-4 mt-2 flex flex-col items-center gap-3">
+                <li className="w-full border-t border-gray-300/20 pt-4 mt-2 flex flex-col items-center gap-3">
                   <UserMenu
                     users={users}
                     currentUser={currentUser}
                     setCurrentUser={setCurrentUser}
                   />
+                  {users==="" ? " ":
                   <MiniCart />
+}
                 </li>
               </ul>
             </motion.div>

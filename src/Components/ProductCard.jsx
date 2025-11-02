@@ -40,18 +40,18 @@ const { rating, avgRating, totalVotes, vote } = useProductRating(product.id);
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ y: -5, boxShadow: "0px 8px 10px rgba(0,0,0,0.15)" }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="bg-black/20  rounded-lg shadow-sm overflow-hidden group"
-       onClick={onOpenModal}
+      className="bg-black/20  rounded-lg shadow-sm overflow-hidden group z-20 relative"
+       
     >
-      <div className="relative overflow-hidden aspect-square rounded-t-lg w-full h-[24rem] md:h-auto">
-        <div className="absolute flex items-center justify-end w-full z-50 px-6 py-4">
+      <div className="relative overflow-hidden aspect-square rounded-t-lg w-full md:h-[24rem] md:h-auto">
+        <div className="absolute flex items-center justify-end w-full  px-6 py-4">
           
 
             {/* Botón corazón animado */}
             <motion.button
               whileTap={{ scale: 1.2 }}
               onClick={() => setLiked(!liked)}
-              className="focus:outline-none !outline-none !text-red-500 !bg-transparent !p-0 !border-0"
+              className="focus:outline-none !outline-none !text-red-500 !bg-transparent !p-0 !border-0 z-50"
             >
               <motion.svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,16 +70,16 @@ const { rating, avgRating, totalVotes, vote } = useProductRating(product.id);
               </motion.svg>
             </motion.button>
       </div>
-            <motion.img
+            <motion.div
         src={product.imagen || notImg}
         alt={product.Name}
-        className={"w-full hover:brightness-50 h-full rounded-t-lg object-cover transition-transform duration-500 bg-contain p-[2rem]  bg-center bg-no-repeat"}
+        className={"w-full h-full rounded-t-lg object-cover transition-transform duration-500 group-hover:scale-110 bg-cover p-[2rem] bg-[url('"+`${product.imagen ||  notImg}`+"')] bg-center bg-no-repeat"}
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.3 }}
        
       >
-        </motion.img>
-        <div class="absolute inset-0 !bg-[#00000096] bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+        </motion.div>
+        <div class="absolute inset-0 !bg-[#00000096] bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" onClick={onOpenModal}>
            <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.05 }}
@@ -92,32 +92,36 @@ const { rating, avgRating, totalVotes, vote } = useProductRating(product.id);
           
         </div>
     </div>
-     <div className="flex items-center justify-between  py-4 gap-2 bg-white  ">
-      <div className="mt-2 w-2/3 mx-4">
-        <h2 className="!text-[1.5rem] font-bold max-w-lg mb-3">
-          <span className="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent  ">{product.Name}</span></h2>
-          <span className="text-md !bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent mt-1">
-            {`${new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(product.Price)} USD`}
-          </span>
-      </div>
-       <div className="flex items-center flex-wrap gap-[0.2rem] mt-2">
-        {[...Array(5)].map((_, index) => {
-          const value = index + 1;
-          return (
-          <Star
-            key={value}
-            filled={value <= rating}
-            onClick={() => vote(value)}
-          />
-        );
-        })}
-       <span className="text-md text-gray-300 mt-1">
-            ({avgRating.toFixed(1)}/5 · {totalVotes} votos)
+     <div className="flex items-center justify-between p-4 gap-2 z-20" >
+      <div className="mt-2 w-2/3" onClick={onOpenModal}>
+        <h4 className="font-semibold text-base text-white w-full space-y-4 truncate mb-2 hover:!text-gray-400 hover:cursor-pointer">{product.Name}</h4>
+        <span className="text-md text-gray-300 mt-1">
+          {`${new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(product.Price)} USD`}
         </span>
+      
       </div>
+       
+       <div className="flex items-center flex-wrap gap-[0.2rem] mt-2 z-50" >
+  {[...Array(5)].map((_, index) => {
+    const value = index + 1;
+    return (
+      <Star
+        key={value}
+        filled={value <= rating}
+        onClick={() => vote(value)}
+      />
+    );
+  })}
+  <span className="text-md text-gray-300 mt-1">
+    ({avgRating.toFixed(1)}/5 · {totalVotes} votos)
+  </span>
+</div>
+      </div>
+      <div className="flex justify-between items-center mt-2 px-6 py-2 relative !bottom-[1rem] w-full">
+        
       </div>
     </motion.div>
     </>

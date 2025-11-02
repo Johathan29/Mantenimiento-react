@@ -2,8 +2,16 @@ import hero from '../assets/hero.jpeg'
 import ChartDashboard from './chartDashboard'
 import { motion } from 'framer-motion'
 import { ArrowRight, Zap } from 'lucide-react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import ScrollButton from './ScrollButton';
 export default function SliderShow(){
+   const sectionRef = useRef(null);
+
+  // Función que realiza el scroll
+  const handleScroll = () => {
+    sectionRef.current.scrollIntoView({ behavior: "smooth" });
+  };
     return(
     <>
     <section className="relative overflow-hidden bg-hero-gradient py-20 md:py-32 w-full">
@@ -150,11 +158,7 @@ export default function SliderShow(){
           </motion.div>
         </div>
       </div>
-      <div className="w-full text-center">
-      <a class="size-6 animate-bounce ">
-  <i class="fa-solid fa-arrow-down"></i>
-</a>
-</div>
+      
     </section>
     </>)
 }

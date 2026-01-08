@@ -5,16 +5,33 @@ import { ArrowRight, Zap } from 'lucide-react';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollButton from './ScrollButton';
+import apple from '../assets/Apple_logo_black.svg'
+import Sony from '../assets/Sony_logo.svg'
+import Dell from '../assets/Dell_Logo.svg'
+import HP from '../assets/HP_logo_2012.svg'
+import Lenovo from '../assets/Lenovo_logo_2015.svg'
+import samsung from '../assets/samsung-Logo.svg'
+import { CounterCard } from './ui/CounterCard';
 export default function SliderShow(){
    const sectionRef = useRef(null);
 
-  // Función que realiza el scroll
+const brands = [
+  { name: "Apple", src: apple },
+  { name: "Samsung", src: samsung },
+  { name: "Sony", src:Sony },
+  { name: "Dell", src: Dell },
+  { name: "HP", src: HP },
+  { name: "Lenovo", src: Lenovo },
+];
+  // Función que realize el scroll
   const handleScroll = () => {
     sectionRef.current.scrollIntoView({ behavior: "smooth" });
+     
   };
+  const duplicatedBrands = [...brands, ...brands, ...brands,...brands ,...brands];
     return(
     <>
-    <section className="relative overflow-hidden bg-hero-gradient py-20 md:py-32 w-full">
+    <section className="relative overflow-hidden bg-hero-gradient py-16 w-full h-[50.5rem]">
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -80,11 +97,11 @@ export default function SliderShow(){
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="flex gap-8 pt-8"
+              className="flex gap-8 pt-8 items-center"
             >
               <div>
-                <div className="text-3xl font-bold">500+</div>
-                <div className="text-white/80 text-sm">Productos</div>
+                <div className="text-3xl font-bold flex items-center "><CounterCard count={500} role={'slider'}/>+</div>
+                <div className="text-white/80 text-sm -mt-[1px]">Productos</div>
               </div>
               <div>
                 <div className="text-3xl font-bold">10k+</div>
@@ -102,7 +119,7 @@ export default function SliderShow(){
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            className="relative top-[6rem]"
           >
             <div className="relative aspect-square max-w-lg mx-auto">
               <motion.div
@@ -117,8 +134,9 @@ export default function SliderShow(){
                 className="absolute inset-0 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl flex items-center justify-center border border-white/20"
               >
                 <div className="text-center p-8">
-                  <div className="w-32 h-32 mx-auto bg-white/20 rounded-2xl flex items-center justify-center mb-4">
-                    <Zap className="h-16 w-16 text-white" />
+                  <div className="w-32 h-32 mx-auto bg-[url('/src/assets/reloj.PNG')] bg-cover bg-no-repeat bg-center rounded-2xl flex items-center justify-center mb-4">
+                   
+                    
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">
                     Producto Destacado
@@ -152,13 +170,41 @@ export default function SliderShow(){
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="absolute -bottom-4 h-[8rem] -right-4 w-32 h-32 bg-white/20 rounded-2xl backdrop-blur-sm bg-[url('/src/assets/celular.jpg')] bg-cover bg-no-repeat bg-center"
+                className="absolute -bottom-4 h-[8rem] -right-4 w-32 h-32 bg-white/20 rounded-2xl backdrop-blur-sm bg-[url('/src/assets/Samsung_Galaxy_S21.webp')] bg-cover bg-no-repeat bg-center"
               />
             </div>
           </motion.div>
         </div>
       </div>
-      
+      <div className="absolute w-full overflow-hidden py-1 bottom-0 bg-[#0000003b] ">
+                <motion.div
+                  className="flex gap-16 items-center py-2"
+                  animate={{ x: ["0%", "-50%"] }}
+                  transition={{
+                    x: {
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      duration: 30,
+                      ease: "linear",
+                    },
+                  }}
+                  style={{ width: '100%' }}
+                >
+                  {duplicatedBrands.map((brand, index) => (
+                    <div
+                      key={`${brand.name}-${index}`}
+                      className="flex flex-col items-center justify-center min-w-[2rem] group"
+                    >
+                      <div className="w-[2rem] h-[2rem] rounded-full bg-background p-2 buttonRef shadow-md flex items-center justify-center text-4xl group-hover:shadow-glow transition-all duration-300 group-hover:scale-110">
+                        <img src={brand.src} alt={brand.name} className=''/>
+                      </div>
+                      <span className="mt-0 text-[9px] leading-[0.8rem] font-semibold text-white group-hover:!text-sky-500 transition-colors">
+                        {brand.name}
+                      </span>
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
     </section>
     </>)
 }

@@ -17,9 +17,11 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import useControllerChild from "../Controllers/ControllerChild";
 import PathLocation from "../hooks/Location";
 import TitlePage from "../Controllers/TitlePage";
+
 import inStock from "../assets/en-stock.png";
 import backgroundCard from '../assets/backgroundcard.png'
 import { userController } from "../Controllers/controllerUser";
+import { CounterCard } from "../Components/ui/CounterCard";
 
 // Registrar ChartJS + plugin
 ChartJS.register(
@@ -37,68 +39,7 @@ ChartJS.register(
 );
 
 // 🔹 Counter Card
-function CounterCard({ role, count }) {
-  const [start, setStart] = useState(false);
-  const [current, setCurrent] = useState(0);
-  const ref = useRef();
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setStart(true);
-          observer.unobserve(ref.current);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(ref.current);
-  }, []);
-
-  useEffect(() => {
-    if (start) {
-      let i = 0;
-      const step = count / 100;
-      const interval = setInterval(() => {
-        i += step;
-        if (i >= count) {
-          setCurrent(count);
-          clearInterval(interval);
-        } else {
-          setCurrent(Math.ceil(i));
-        }
-      }, 20);
-    }
-  }, [start, count]);
-
-  return (
-    <div
-      ref={ref}
-      className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border border-gray-200 h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-    >
-      <div className="p-6">
-        <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-[#f0f8ff]">
-            <img
-              src={inStock}
-              alt=""
-              className="w-12 h-12 rounded-lg flex items-center justify-center"
-            />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-lg text-[#21242c]">
-              {role || "Gestión de Usuarios"}
-            </h3>
-            <p className="text-sm text-[#73888c]">Total de {role}</p>
-          </div>
-        </div>
-        <div className="text-left mt-4 text-[2rem] font-bold text-[#00728f]">
-          {current >= 100 ? current + "+" : current}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Child() {
   const { fetchUsers, deleteUser } = userController;
@@ -247,6 +188,7 @@ function Child() {
 
           {/* Contadores */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          
             <CounterCard role="Ventas" count={userCount} />
             <CounterCard role="Clientes" count={userCount + 5} />
             <CounterCard role="Productos" count={userCount - 2} />

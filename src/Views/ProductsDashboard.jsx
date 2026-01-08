@@ -107,36 +107,40 @@ function ProductsDashboard() {
               </span>
             </div>
           </div>
-
           {/* Botón Nuevo Producto */}
-          <motion.button
-            onClick={updateModal}
-            type="button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="group relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium h-9 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl border transition-all duration-300"
-          >
-            <Plus className="h-5 w-5 shrink-0 text-cyan-400" />
-            <motion.span
-              initial={{ opacity: 0, x: -8 }}
-              whileHover={{ opacity: 1, x: 4 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="hidden group-hover:inline-block group-hover:text-cyan-400"
-            >
-              Nuevo Producto
-            </motion.span>
-          </motion.button>
+          <div className="relative group">
+            <motion.button
+                onClick={updateModal}
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                className="relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium 
+                  h-9 px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 
+                  hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg 
+                  overflow-hidden border border-white/10 transition-all duration-300">
+                {/* Capa de brillo en hover */}
+                  <motion.div
+                   className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                {/* Ícono estable */}
+                  <motion.div className="relative z-10 flex items-center" >
+                    <Plus className="h-5 w-5 shrink-0 text-cyan-400 transition-transform duration-300 " />
+                  </motion.div>
+                {/* Texto animado — aparece desde la derecha sin desplazar el ícono */}
+                  <motion.span
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="relative z-10 opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-cyan-300 font-semibold">
+                    Nuevo Producto
+                  </motion.span>
+              </motion.button>
+            </div>
         </div>
-
         {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 bg-[#2726265c] flex justify-center items-center z-50">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white p-6 rounded-lg shadow-lg w-[90%] sm:max-w-lg"
+             
+              className="bg-white p-6 rounded-lg shadow-lg w-full sm:max-w-lg"
             >
               <FormProducts product={productsToShow} onClose={closeModal} />
             </motion.div>
@@ -217,12 +221,87 @@ function ProductsDashboard() {
             >
               {item.special === "export" ? (
                 <>
-                  <h5 className="text-white text-md font-bold mb-2 flex items-center justify-between">Exports Data <i class="fa-solid fa-download text-cyan-400 text-xl" ></i></h5>
-                  <div className="flex gap-3">
-                    <button onClick={() => exportCSV(dataProducts)} className="text-green-500 text-2xl hover:text-green-700"><i className="fa-solid fa-file-csv"></i></button>
-                    <button onClick={() => exportExcel(dataProducts)} className="text-green-600 text-2xl hover:text-green-800"><i className="fa-solid fa-file-excel"></i></button>
-                    <button onClick={() => exportPDF(dataProducts)} className="text-red-500 text-2xl hover:text-red-700"><i className="fa-solid fa-file-pdf"></i></button>
-                  </div>
+                <div className='flex justify-between mb-4 items-center'>
+                  <p className="text-sm font-bold">
+                    Exports Data 
+                  </p>
+                  <i class="fa-solid fa-download text-cyan-400 text-xl" ></i>
+                  
+                </div>
+                 <div className="flex gap-4 justify-center">
+
+  {/* CSV */}
+  <div className="relative group">
+    <motion.button
+      whileHover={{ scale: 1.15 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      onClick={() => exportCSV(dataProducts)}
+      className="text-green-500 text-2xl hover:text-green-700 transition-transform"
+    >
+      <i className="fa-solid fa-file-csv"></i>
+    </motion.button>
+
+    {/* Tooltip con flecha visible */}
+    <span className="absolute bottom-9 left-1/2 -translate-x-1/2  w-max
+      bg-gray-400/10 backdrop-blur-md  
+      text-white text-xs px-3 py-1 rounded-xl shadow-md opacity-0 
+      group-hover:opacity-100 group-hover:translate-y-[-4px] 
+      transition-all duration-300 ease-out pointer-events-none 
+      z-10 before:content-['▾'] before:absolute before:top-[0.7rem] before:left-1/2 
+      before:-translate-x-1/2  before:text-gray-400/10 before:text-[1.6rem]
+        before:z-50 ">
+      Descargar CSV
+    </span>
+  </div>
+
+  {/* Excel */}
+  <div className="relative group">
+    <motion.button
+      whileHover={{ scale: 1.15 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      onClick={() => exportExcel(dataProducts)}
+      className="text-green-600 text-2xl hover:text-green-800 transition-transform"
+    >
+      <i className="fa-solid fa-file-excel"></i>
+    </motion.button>
+
+    <span className="absolute bottom-9 left-1/2 -translate-x-1/2  w-max
+      bg-gray-400/10 backdrop-blur-md  
+      text-white text-xs px-3 py-1 rounded-xl shadow-md opacity-0 
+      group-hover:opacity-100 group-hover:translate-y-[-4px] 
+      transition-all duration-300 ease-out pointer-events-none 
+      z-10 before:content-['▾'] before:absolute before:top-[0.7rem] before:left-1/2 
+      before:-translate-x-1/2  before:text-gray-400/10 before:text-[1.6rem]
+        before:z-50 ">
+      Descargar Excel
+    </span>
+  </div>
+
+  {/* PDF */}
+  <div className="relative group">
+    <motion.button
+      whileHover={{ scale: 1.15 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      onClick={() => exportPDF(dataProducts)}
+      className="text-red-500 text-2xl hover:text-red-700 transition-transform"
+    >
+      <i className="fa-solid fa-file-pdf"></i>
+    </motion.button>
+
+    <span className="absolute bottom-9 left-1/2 -translate-x-1/2  w-max
+      bg-gray-400/10 backdrop-blur-md  
+      text-white text-xs px-3 py-1 rounded-xl shadow-md opacity-0 
+      group-hover:opacity-100 group-hover:translate-y-[-4px] 
+      transition-all duration-300 ease-out pointer-events-none 
+      z-10 before:content-['▾'] before:absolute before:top-[0.7rem] before:left-1/2 
+      before:-translate-x-1/2  before:text-gray-400/10 before:text-[1.6rem]
+        before:z-50 ">
+      Descargar PDF
+    </span>
+  </div>
+
+</div>
+
                 </>
               ) : item.special === true ? (
                 <>

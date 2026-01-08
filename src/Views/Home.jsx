@@ -27,7 +27,7 @@ export default function HomePage(){
         <>
         <App></App>
      <BrandSlider/>
-     <ScrollButton onScroll={handleScroll}></ScrollButton>
+    {/*<ScrollButton onScroll={handleScroll}></ScrollButton>*/}
      <ProductComponent refProp={sectionRef}/>
      <WhyChooseUs/>
         <Child />

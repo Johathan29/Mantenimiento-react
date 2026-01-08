@@ -1,5 +1,4 @@
-@import "tailwindcss";
-@import "flowbite/src/themes/default";
+
 body,h1{
   font-family: Georgia, 'Times New Roman', Times, serif;
   background-color: #fff;
@@ -32,8 +31,35 @@ body,h1{
         font-size: 1.5em;
         transition: all 0.5s linear;
     }
+ul.navDash li a.active {
+    background: #071631;
+    color: #22d3ee;
+}
+select option{
+  
+  background: #0c1f4d;
+}
+    details[open] summary{
+      background-color: #06b6d4;
+      color: white;
+      
+    }
+    details.details-animated > .content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: all 0.35s ease-in-out;
+}
 
-    
+details.details-animated[open] > .content {
+  max-height: 1000px;
+  opacity: 1;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 /*
 .logo {
   height: 6em;

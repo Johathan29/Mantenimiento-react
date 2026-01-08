@@ -25,10 +25,12 @@ import ProductsDashboard from "../Views/ProductsDashboard.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "../Components/FormLogin.jsx";
 import Register from "../Components/Register.jsx";
-import Carts from "../Views/Carts.jsx";
+import Carts from "../Views/carts.jsx";
 import AdminRolesPanel from "../Views/gestionUser.jsx";
 import About from "../Views/About.jsx";
 import FormUpdateUsers from "../Views/FormUpdateUser.jsx";
+import { element } from "prop-types";
+import Checkout from "../Views/Checkout.jsx";
 const userLogin=localStorage.getItem('user')
 export const 
  
@@ -38,6 +40,7 @@ routes = [
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      {path:"checkout", element:<Checkout></Checkout>},
       { path: "our-collaborators", element: <Child /> },
       { path: "our-collaborators/:id", element: <DetailChild /> },
       { path: "products", element: <ProductComponent /> },
@@ -60,10 +63,14 @@ routes = [
       </ProtectedRoute>,
     children: [
       { index: true, element:  <Homedashboard />  },
-      { path: "edituser", element: <EditUser /> },
-      { path: "products", element: <ProductsDashboard /> },
-       { path: "users", element: <AdminRolesPanel /> },
+      
     ]
- }
+ },
+ { path: "edituser", element:  <ProtectedRoute>
+        <Layoutdashboard />
+      </ProtectedRoute>, children:[ { element: <EditUser />}] },
+      { path: "dashboard-products", element:  <ProtectedRoute>
+        <Layoutdashboard />
+      </ProtectedRoute>, children:[ { index:true, element:  <ProductsDashboard />}] },
+       { path: "users", element: <AdminRolesPanel /> },
 ];
-

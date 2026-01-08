@@ -1,16 +1,15 @@
 import { salesModel } from "../Models/salesModel";
 
 export const salesController = {
-  async fetchSales() {
+  async getAllSales() {
     return await salesModel.getAll();
-    
   },
 
-  async addSales(user) {
-    return await salesModel.create(user);
+  async addSales(saleData) {
+    return await salesModel.create(saleData);
   },
 
-  async deleteSales(id) {
+  async deleteSale(id) {
     return await salesModel.remove(id);
-  }
+  },
 };

@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-
+import QRCode from "qrcode";
 /**
  * Checkout completo:
  * - Stripe (PaymentIntent) + PayPal (client-side SDK)
@@ -167,9 +167,9 @@ const generateInvoicePDF = async (orderId) => {
 
       // 2) Cargar Stripe.js y confirmar payment (frontend)
       // Aquí usamos la librería stripe-js cargada dinámicamente
-      //const stripeJs = await import("@stripe/stripe-js");
+      const stripeJs = await import("@stripe/stripe-js");
       // Reemplaza PUBLIC_STRIPE_PK por tu publishable key en .env
-     // const stripe = await stripeJs.loadStripe(process.env.REACT_APP_STRIPE_PK);
+      const stripe = await stripeJs.loadStripe(process.env.REACT_APP_STRIPE_PK);
 
       // Puedes abrir Stripe Elements o usar confirmCardPayment con datos guardados (aquí uso redirect simplificado)
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {

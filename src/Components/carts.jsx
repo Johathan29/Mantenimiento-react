@@ -30,7 +30,7 @@ export default function CartView() {
         </div>
       </div>
     );
-
+   
   // ⚙️ Procesar venta y actualizar inventario
 const handleCreateSale = async () => {
   const productosSeleccionados = cart.filter((item) =>
@@ -53,6 +53,7 @@ const handleCreateSale = async () => {
   const saleData = {
     cliente: user?.displayName,
     idClient: user?.uid,
+    created: Timestamp.now(),
     productos: productosSeleccionados.map((item) => ({
       id: item.id,
       nombre: item.Name,
@@ -67,20 +68,19 @@ const handleCreateSale = async () => {
   };
 
   try {
-    const newSale = await salesController.addSales(saleData);
+  const newSale = await salesController.addSales(saleData);
 
-    // 🧹 Limpiar carrito solo de los vendidos
-    const remainingItems = cart.filter(
-      (item) => !selectedItems.includes(item.id)
-    );
-    clearCart();
-    remainingItems.forEach((item) => addToCart(item));
-    setSelectedItems([]);
+  // 🧹 Limpiar carrito solo de los vendidos
+  const remainingItems = cart.filter((item) => !selectedItems.includes(item.id));
+  clearCart();
+  remainingItems.forEach((item) => addToCart(item));
+  setSelectedItems([]);
 
-    alert(`✅ Venta registrada correctamente. ID: ${newSale.id}`);
-  } catch (error) {
-    alert(error.message || "Error al registrar la venta");
-  }
+  alert(`✅ Venta registrada correctamente. ID: ${newSale.id}`);
+} catch (error) {
+  console.error("Error al registrar venta:", error);
+  alert(error.message || "Error al registrar la venta");
+}
 };
 
   // 🧮 Totales generales

@@ -1,77 +1,107 @@
 import { motion } from "framer-motion";
-import apple from "../assets/Apple_logo_black.svg";
-import Sony from "../assets/Sony_logo.svg";
-import Dell from "../assets/Dell_Logo.svg";
-import HP from "../assets/HP_logo_2012.svg";
-import Lenovo from "../assets/Lenovo_logo_2015.svg";
-import samsung from "../assets/samsung-logo.svg";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const brands = [
-  { name: "Apple", src: apple },
-  { name: "Samsung", src: samsung },
-  { name: "Sony", src: Sony },
-  { name: "Dell", src: Dell },
-  { name: "HP", src: HP },
-  { name: "Lenovo", src: Lenovo },
-];
+import {
+  Smartphone,
+  Laptop,
+  Headphones,
+  Watch,
+  Camera,
+  Tv,
+ 
+  Computer,
+  Laptop2
+} from "lucide-react";
 
-const BrandsCarousel = () => {
-  const duplicatedBrands = [...brands, ...brands, ...brands];
+export default function BrandsCarousel() {
+  const api = import.meta.env.VITE_API_BASE_URL;
+
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]); // ← Aquí guardaremos las categorías dinámicas
+
+  // Función para asignar iconos según el nombre de categoría
+  const iconMap = {
+    Smartphones: Smartphone,
+    Computer: Laptop2,
+    Audio: Headphones,
+    Wearables: Watch,
+    PC:Computer,
+    TV: Tv,
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get(`${api}/api/products`);
+        const data = res.data;
+
+        setProducts(data);
+
+        // Extraemos categorías únicas y les aplicamos un icono
+        const uniqueCategories = [
+          ...new Set(data.map((p) => p.Category)),
+        ].map((cat) => ({
+          name: cat,
+          icon: iconMap[cat] || Smartphone , // default si no coincide
+          color: "text-white",
+        }));
+
+        setCategories(uniqueCategories);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    };
+
+    fetchProducts();
+  }, [api]);
+
+  const onSelectCategory = (category) => {
+    console.log("Categoría seleccionada:", category);
+  };
 
   return (
-    <section className="py-12 bg-muted/30 overflow-hidden">
-      <div className="container mx-auto px-4 mb-8">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">
-          <span className="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent">
-            Marcas Destacadas
+    <section className="bg-gradient-to-br from-blue-50 to-cyan-50">
+      <div className="container mx-auto py-12">
+        <div class="text-center  py-2 ">
+          <h2 class="text-4xl md:text-5xl font-bold ">
+            <span class="!bg-gradient-to-r !from-[#24278f] !via-[#5c2eb8] !to-[#00bfff] !bg-clip-text text-transparent  ">
+               Explora por Categoría
+            </span>
+          </h2>
+          <span className="text-sm text-[#4b5563] font-[600]">
+          Navega entre nuestras categorías y encuentra la tecnología perfecta para tu estilo de vida
           </span>
-        </h2>
-        <p className="!text-[1.125rem] leading-[1.75rem] text-muted-foreground max-w-xl mx-auto text-center">
-          Trabajamos con las mejores marcas del mercado
-        </p>
-      </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 py-8">
+          {categories.map((cat, i) => {
+            const Icon = cat.icon;
 
-      {/* Carrusel */}
-      <div className="relative w-full overflow-hidden py-6">
-        <motion.div
-          className="flex items-center"
-          animate={{
-            x: [0, -150 * brands.length],
-          }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 30,
-              ease: "linear",
-            },
-          }}
-          style={{ width: "max-content" }}
-        >
-          {duplicatedBrands.map((brand, index) => (
-            <div
-              key={`${brand.name}-${index}`}
-              className="flex flex-col items-center justify-center px-6 sm:px-8 md:px-12 lg:px-16 group"
-            >
-              <div className="w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full bg-background p-3 sm:p-4 shadow-md flex items-center justify-center text-4xl group-hover:shadow-glow transition-all duration-300 group-hover:scale-110">
-                <img
-                  src={brand.src}
-                  alt={brand.name}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </div>
-              <span className="mt-3 text-sm font-semibold text-gray-500 group-hover:!text-sky-500 transition-colors text-center">
-                {brand.name}
-              </span>
-            </div>
-          ))}
-        </motion.div>
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                onClick={() => onSelectCategory(cat.name)}
+                className="cursor-pointer"
+              >
+                <div className="rounded-lg border bg-white shadow-sm hover:shadow-xl transition-all group">
+                  <div className="p-6 flex flex-col items-center gap-3">
+                    <div className="w-16 h-16 rounded-full bg-hero-gradient flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Icon className={`h-8 w-8 ${cat.color}`} />
+                    </div>
+
+                    <h3 className="text-md font-bold text-center text-sky-500">
+                      {cat.name}
+                    </h3>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
-};
-
-export default BrandsCarousel;
-
-
-
+}

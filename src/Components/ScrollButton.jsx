@@ -9,10 +9,10 @@ export default function ScrollButton({ onScroll }) {
     }
   };
   return (
-       <div class="w-full text-center absolute bottom-0 py-8 ">
+       <div class="w-full text-center absolute bottom-[20rem] py-8 ">
         <div class="flex justify-center">
-          <div class="h-12 w-12 animate-bounce rounded-full bg-blue-500/40 p-1 cursor-pointer">
-            <a onClick={handleScroll} class="size-6 !text-[1.7rem] !text-white !text-center">
+          <div class="h-8 w-8 animate-bounce rounded-full bg-blue-500 p-1 cursor-pointer">
+            <a onClick={handleScroll} class="size-6 !text-[1rem] !text-white !text-center">
               <i class="fa-solid fa-arrow-down a"></i>
             </a>
           </div>

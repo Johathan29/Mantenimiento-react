@@ -25,7 +25,7 @@ import ProductsDashboard from "../Views/ProductsDashboard.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "../Components/FormLogin.jsx";
 import Register from "../Components/Register.jsx";
-import Carts from "../Views/Carts.jsx";
+import Carts from "../Views/carts.jsx";
 import AdminRolesPanel from "../Views/gestionUser.jsx";
 import About from "../Views/About.jsx";
 import FormUpdateUsers from "../Views/FormUpdateUser.jsx";
@@ -74,4 +74,3 @@ routes = [
       </ProtectedRoute>, children:[ { index:true, element:  <ProductsDashboard />}] },
        { path: "users", element: <AdminRolesPanel /> },
 ];
-
